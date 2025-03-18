@@ -1,0 +1,55 @@
+# System-generated files
+.DS_Store
+Thumbs.db
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment directories
+venv/
+env/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Data files (large datasets, images, videos used for training or testing)
+data/
+datasets/
+images/
+videos/
+
+# Model files (large trained model weights, checkpoints)
+models/
+*.h5
+*.h5
+*.ckpt
+*.pth
+
+# Logs and outputs
+logs/
+*.log
+
+# Environment variables and secrets
+.env
+config.json
+secrets.json
+
+# IDE-specific files (e.g., VSCode settings)
+.vscode/
+
+# Build artifacts and temporary files
+build/
+dist/
+*.egg-info/
+
+# System-specific files (e.g., macOS)
+.DS_Store
+
+# Sensitive or secret information
+secrets.json
+credentials.json
+
+## secret files
+*.pub

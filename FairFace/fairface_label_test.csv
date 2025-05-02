@@ -1,0 +1,26 @@
+file,age,gender,race,age_label,gender_label,race_label
+val/923.jpg,30-39,Male,White,4,1,6
+val/953.jpg,30-39,Female,White,4,0,6
+val/1629.jpg,10-19,Male,Latino,1,1,3
+val/2548.jpg,20-29,Female,Middle Eastern,2,0,4
+val/2573.jpg,20-29,Male,Southeast Asian,2,1,5
+val/3378.jpg,30-39,Female,Latino,4,0,3
+val/3501.jpg,50-59,Male,Latino,6,1,3
+val/3810.jpg,60+,Female,Middle Eastern,7,0,4
+val/4143.jpg,60+,Male,Black,7,1,0
+val/4160.jpg,3-9,Male,East Asian,3,1,1
+val/4510.jpg,40-49,Female,Black,5,0,0
+val/4743.jpg,30-39,Male,East Asian,4,1,1
+val/5406.jpg,20-29,Female,Black,2,0,0
+val/5568.jpg,40-49,Male,Black,5,1,0
+val/5858.jpg,40-49,Male,Latino,5,1,3
+val/6002.jpg,20-29,Female,Black,2,0,0
+val/7199.jpg,20-29,Female,Latino,2,0,3
+val/7344.jpg,30-39,Female,East Asian,4,0,1
+val/9059.jpg,20-29,Female,White,2,0,6
+val/9127.jpg,30-39,Male,Black,4,1,0
+val/9242.jpg,40-49,Male,Latino,5,1,3
+val/9425.jpg,10-19,Female,Southeast Asian,1,0,5
+val/9430.jpg,20-29,Female,Black,2,0,0
+val/10390.jpg,10-19,Male,Latino,1,1,3
+val/10942.jpg,3-9,Male,Middle Eastern,3,1,4

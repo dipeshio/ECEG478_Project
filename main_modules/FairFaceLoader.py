@@ -26,10 +26,21 @@ import tqdm as tqdm
 class FairFaceLoader():
     def __init__(self, filepath):
         self.df = pd.read_csv(filepath)
-    
-        ## basic cleaning and processing
-        self.df = self.df.drop(columns=['service_test'])
         self.balanced_df = None
+        self.secondary_df = None
+        self.sampleSet = None
+        self.testSet = None
+        
+    def __print__(self):
+    # function that prints the first 5 rows of the dataframe
+        print(self.df.head())
+        
+    def __len__(self):
+    # function that returns the length of the dataframe
+        return len(self.df)
+    
+    def clean(self):
+        self.df = self.df.drop(columns=['service_test'])        
         ## Combining the age bins of '60-69' and 'more than 70' into '60+' and relabeling the age bins
         self.df['age'] = self.df['age'].replace({'60-69': '60+', 'more than 70': '60+'})
         # rename Latino_Hispanic to Latino
@@ -52,22 +63,15 @@ class FairFaceLoader():
         ## drop the original columns
         self.df = self.df.drop(['age', 'gender','race'], axis=1)
 
-    def __print__(self):
-    # function that prints the first 5 rows of the dataframe
-        print(self.df.head())
         
-    def __len__(self):
-    # function that returns the length of the dataframe
-        return len(self.df)
     
-    
-    def balance(self, attr_cols, n_per_group):
+    def balance(self, df, attr_cols, n_per_group):
         # function that balances the dataset by multiple attributes
         
         state_value = np.random.randint(0, 1500) # Use numpy directly to generate a random integer
         ## I saw that using a static random state value of 0 was causing the same random sample to be generated every time
         
-        grouped = self.df.groupby(attr_cols)
+        grouped = df.groupby(attr_cols)
         self.balanced_df = grouped.apply(lambda x: x.sample(n=min(len(x), n_per_group), random_state=state_value))
         self.balanced_df = self.balanced_df.reset_index(drop=True)
         return self.balanced_df
@@ -132,14 +136,18 @@ class FairFaceLoader():
         print(list(zip(self.age_encoder.classes_, range(len(self.age_encoder.classes_)))))
         print(list(zip(self.gender_encoder.classes_, range(len(self.gender_encoder.classes_)))))
         print(list(zip(self.race_encoder.classes_, range(len(self.race_encoder.classes_)))))
-        return 
+        return
+    
+    def sampler():
+        self.sec
+        
         
 
 
-# testSet = FairFaceLoader('FairFace/fairface_label_train.csv')
-# testSet.randomizeSet()
-# testSet.balance(['age_label', 'gender_label', 'race_label'], 100)
-# # save as csv
-# # print(testSet.balanced_df)
-# testSet.randomizeBalancedSet()
-# testSet.displayChart("balanced")
+testSet = FairFaceLoader('FairFace/fairface_label_train.csv')
+testSet.randomizeSet()
+testSet.balance(['age_label', 'gender_label', 'race_label'], 100)
+# save as csv
+# print(testSet.balanced_df)
+testSet.randomizeBalancedSet()
+testSet.displayChart("balanced")

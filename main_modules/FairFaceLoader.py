@@ -554,7 +554,7 @@ from torch.utils.data import DataLoader
 from statistics import mean
 import multiprocessing 
 
-if __name__ == "__main22__":
+if __name__ == "__main__":
     multiprocessing.freeze_support() # need this for some reason
     trainingSet = FairFaceLoader('FairFaceMain/fairface_label_train.csv')
     trainingSetData = trainingSet.getDataSet()
@@ -637,7 +637,7 @@ if __name__ == "__main22__":
         
         ## incramentally save the model after every 20 epochs
         if (epoch+1) % 5 == 0:
-            torch.save(model.state_dict(), f"FairFaceMain/model_checkpoints/model_epoch_{epoch+1}.pth")
+            torch.save(model.state_dict(), f"FairFaceMain/model_checkpoints/2model_epoch_{epoch+1}.pth")
             print(f"Model saved at epoch {epoch+1}")
 
         # Print metrics
@@ -648,19 +648,19 @@ if __name__ == "__main22__":
             f"VAL    age={vl_acc_age:.2%}  gen={vl_acc_gen:.2%}  race={vl_acc_race:.2%} |\n"
             f"ETA ~ {eta_str}")
         
-        ## print plots of the training and validation loss and accuracy
-        plt.figure(figsize=(12, 6))
-        plt.subplot(1, 2, 1)
-        plt.plot(range(1, epoch+2), trainLoss, label='Train Loss')
-        plt.plot(range(1, epoch+2), valLoss, label='Validation Loss')
-        plt.title('Loss vs Epochs')
-        plt.show()
+    ## print plots of the training and validation loss and accuracy
+    plt.figure(figsize=(12, 6))
+    plt.subplot(1, 2, 1)
+    plt.plot(range(1, epoch+2), trainLoss, label='Train Loss')
+    plt.plot(range(1, epoch+2), valLoss, label='Validation Loss')
+    plt.title('Loss vs Epochs')
+    plt.show()
 ## 
 
-age, gender, race = testSet.getDecodedLabels()
-# result = ModelTesting.predict_img("FairFaceMain/test/68792.jpg", age, gender, race)
-# # print(result)
+# age, gender, race = testSet.getDecodedLabels()
+# # result = ModelTesting.predict_img("FairFaceMain/test/68792.jpg", age, gender, race)
+# # # print(result)
 
-# ModelTesting.model_test_batch("FairFaceMain/fairface_label_test.csv", "FairFaceMain/test", age, gender,race)
-## test different sizes
-testDiffSizes(age, gender, race, [10,25,50,100,200,500,1000])
+# # ModelTesting.model_test_batch("FairFaceMain/fairface_label_test.csv", "FairFaceMain/test", age, gender,race)
+# ## test different sizes
+# testDiffSizes(age, gender, race, [10,25,50,100,200,500,1000])

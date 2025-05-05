@@ -7,12 +7,13 @@ from pathlib import Path
 # ── transforms ──────────────────────────────────────────────
 IMG_SIZE = 224
 train_tfms = transforms.Compose([
-    transforms.Resize(IMG_SIZE),
-    transforms.CenterCrop(IMG_SIZE),
+    transforms.RandomResizedCrop(IMG_SIZE, scale=(0.7,1.0)),
     transforms.RandomHorizontalFlip(),
+    transforms.ColorJitter(0.3,0.3,0.3,0.05),
     transforms.ToTensor(),
     transforms.Normalize([0.485,0.456,0.406],
-                         [0.229,0.224,0.225])
+                         [0.229,0.224,0.225]),
+    transforms.RandomErasing(p=0.25, scale=(0.02,0.12))
 ])
 
 val_tfms = transforms.Compose([
@@ -28,8 +29,8 @@ class FairFaceMulti(Dataset):
     def __init__(self, df, img_dir, train=True):
         self.df       = df.reset_index(drop=True)
         self.img_dir  = Path(img_dir)
-        self.tfm      = train_tfms if train else val_tfms
-
+        self.tfm = train_tfms if train else val_tfms
+        
     def __len__(self):
         return len(self.df)
 

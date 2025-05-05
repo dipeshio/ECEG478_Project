@@ -13,6 +13,7 @@ import os
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
+# import FairFaceLoader as FairFaceLoader
 
 
 ## we have to define the labels and encoding
@@ -29,9 +30,9 @@ GENDER_CLASSES_LIST = gender_encoder.classes_.tolist()
 RACE_CLASSES_LIST = race_encoder.classes_.tolist()
 
 
-model = AgeGenderNet.AgeGenderNet()
-model.load_state_dict(torch.load(r"FairFaceMain\model_checkpoints\model_epoch_10.pth"))
-model.eval()                      
+model = AgeGenderNet.AgeGenderNet() # <-- Add the correct backbone name here
+model.load_state_dict(torch.load(r"FairFaceMain\model_checkpoints\4model_epoch_60.pth"))
+model.eval()                     
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 

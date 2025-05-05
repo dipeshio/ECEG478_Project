@@ -554,7 +554,7 @@ from torch.utils.data import DataLoader
 from statistics import mean
 import multiprocessing 
 
-if __name__ == "__main__":
+if __name__ == "__ma2in__":
     multiprocessing.freeze_support() # need this for some reason
     trainingSet = FairFaceLoader('FairFaceMain/fairface_label_train.csv')
     trainingSetData = trainingSet.getDataSet()
@@ -569,8 +569,8 @@ if __name__ == "__main__":
     val_ds   = FairFaceMulti.FairFaceMulti(valSetData,      "FairFaceMain/val",   train=False)
 
 
-    train_loader = DataLoader(train_ds, batch_size=16, shuffle=True,  num_workers=0, pin_memory=True)
-    val_loader   = DataLoader(val_ds,   batch_size=16, shuffle=False, num_workers=0, pin_memory=True)
+    train_loader = DataLoader(train_ds, batch_size=32, shuffle=True,  num_workers=0, pin_memory=True)
+    val_loader   = DataLoader(val_ds,   batch_size=64, shuffle=False, num_workers=0, pin_memory=True)
 
     # define the model and loss functions
     model = AgeGenderNet.AgeGenderNet().cuda()
@@ -595,7 +595,7 @@ if __name__ == "__main__":
     if not os.path.exists('FairFaceMain/model_checkpoints'):
         os.makedirs('FairFaceMain/model_checkpoints')
 
-    EPOCHS = 15
+    EPOCHS = 60
     # to keep track of time
     epoch_times = []
 
@@ -637,7 +637,7 @@ if __name__ == "__main__":
         
         ## incramentally save the model after every 20 epochs
         if (epoch+1) % 5 == 0:
-            torch.save(model.state_dict(), f"FairFaceMain/model_checkpoints/2model_epoch_{epoch+1}.pth")
+            torch.save(model.state_dict(), f"FairFaceMain/model_checkpoints/4model_epoch_{epoch+1}.pth")
             print(f"Model saved at epoch {epoch+1}")
 
         # Print metrics
@@ -649,18 +649,40 @@ if __name__ == "__main__":
             f"ETA ~ {eta_str}")
         
     ## print plots of the training and validation loss and accuracy
-    plt.figure(figsize=(12, 6))
-    plt.subplot(1, 2, 1)
-    plt.plot(range(1, epoch+2), trainLoss, label='Train Loss')
-    plt.plot(range(1, epoch+2), valLoss, label='Validation Loss')
-    plt.title('Loss vs Epochs')
+    ## print plots of the training and validation loss and accuracy
+    plt.figure(figsize=(10, 6))
+    epochs = list(range(1, epoch+2))
+    plt.plot(epochs, trainLoss, marker='o', label='Train Loss', color='blue')
+    plt.plot(epochs, valLoss, marker='s', label='Validation Loss', color='orange')
+    plt.title('Training and Validation Loss over Epochs', fontsize=14)
+    plt.xlabel('Epoch', fontsize=12)
+    plt.ylabel('Loss', fontsize=12)
+    plt.legend(loc='upper right', fontsize=10)
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+    plt.tight_layout()
     plt.show()
+    ## save the figure
+    plt.savefig('FairFaceMain/plots/4loss_plot.png')
+    
+    ## create a new figure for the accuracy
+    plt.figure(figsize=(10, 6))
+    plt.plot(epochs, trainAcc, marker='o', label='Training Accuracy', color='green')
+    plt.plot(epochs, valAcc, marker='s', label='Validation Accuracy', color='red')
+    plt.title('Training and Validation Accuracy over Epochs', fontsize=14)
+    plt.xlabel('Epoch', fontsize=12)
+    plt.ylabel('Accuracy', fontsize=12)
+    plt.legend(loc='lower right', fontsize=10)
+    plt.grid(True, which='both', linestyle='--', linewidth=0.5)
+    plt.tight_layout()
+    plt.show()
+    #save the figure
+    plt.savefig('FairFaceMain/plots/4accuracy_plot.png')
 ## 
 
-# age, gender, race = testSet.getDecodedLabels()
-# # result = ModelTesting.predict_img("FairFaceMain/test/68792.jpg", age, gender, race)
-# # # print(result)
+age, gender, race = testSet.getDecodedLabels()
+# # # result = ModelTesting.predict_img("FairFaceMain/test/68792.jpg", age, gender, race)
+# # # # print(result)
 
-# # ModelTesting.model_test_batch("FairFaceMain/fairface_label_test.csv", "FairFaceMain/test", age, gender,race)
-# ## test different sizes
-# testDiffSizes(age, gender, race, [10,25,50,100,200,500,1000])
+# ModelTesting.model_test_batch("FairFaceMain/fairface_label_test.csv", "FairFaceMain/test", age, gender,race)
+## test different sizes
+testDiffSizes(age, gender, race, [10,25,50,100,200,500,1000])

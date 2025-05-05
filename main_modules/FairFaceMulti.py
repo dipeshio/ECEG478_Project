@@ -9,11 +9,11 @@ IMG_SIZE = 224
 train_tfms = transforms.Compose([
     transforms.RandomResizedCrop(IMG_SIZE, scale=(0.7,1.0)),
     transforms.RandomHorizontalFlip(),
-    transforms.ColorJitter(0.3,0.3,0.3,0.05),
+    transforms.ColorJitter(0.2,0.2,0.2,0.1),
     transforms.ToTensor(),
     transforms.Normalize([0.485,0.456,0.406],
                          [0.229,0.224,0.225]),
-    transforms.RandomErasing(p=0.25, scale=(0.02,0.12))
+    transforms.RandomErasing(p=0.25, scale=(0.02,0.08))
 ])
 
 val_tfms = transforms.Compose([
@@ -46,4 +46,3 @@ class FairFaceMulti(Dataset):
 
     def __str__(self):
         return f"FairFaceMulti(n={len(self)}, dir={self.img_dir})"
-

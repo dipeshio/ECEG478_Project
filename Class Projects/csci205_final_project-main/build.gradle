@@ -1,0 +1,84 @@
+// Gradle build file
+// CSCI 205 - Software Engineering and Design
+// Bucknell University
+// Author - B. King / L. Romano
+// Update Log
+// 2022-Fall - added javamodularity, updated versions of javafxplugin
+// 2023-Spring - Modified testLogging events
+// 2025-Spring - Updated to prepare for some deprecation
+// 2025-Spring - Fixed configuration cache issue
+
+plugins {
+    id 'application'
+    id 'java'
+    id 'idea'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+group 'org.nrr004'
+version '0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+run {
+    standardInput = System.in
+    standardOutput = System.out
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standard_out", "standard_error"
+    }
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.media' ]
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    implementation 'org.openjfx:javafx-controls:21'
+    implementation 'org.openjfx:javafx-fxml:21'
+    implementation 'org.openjfx:javafx-media:21'
+    implementation 'org.openjfx:javafx-web:21'
+}
+
+application {
+    mainClass = 'AirForce.MainApp' // Replace with your actual main class
+}
+
+task checkConsole {
+    doLast {
+        println "Console encoding: " + System.getProperty("file.encoding")
+        println "Console name: " + System.console()?.toString()
+        println "Terminal: " + System.getenv("TERM")
+        println "OS name: " + System.getProperty("os.name")
+    }
+}
+
+// Helper function to create JavaFX-enabled run tasks
+def createJavaFXTask(String taskName, String description, String mainClassName) {
+    tasks.register(taskName, JavaExec) {
+        group = 'application'
+        description = description
+
+        classpath = sourceSets.main.runtimeClasspath
+        mainClass = mainClassName
+
+        jvmArgs = [
+                '--module-path', classpath.asPath,
+                '--add-modules', javafx.modules.join(',')
+        ]
+    }
+}
+
+
+// Create a task for the Main application
+createJavaFXTask('runMainApp',
+        'Runs the MainApp application',
+        'AirForce.MainApp')

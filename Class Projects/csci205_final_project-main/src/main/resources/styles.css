@@ -1,0 +1,24 @@
+/* Style the gauge labels */
+.gauge-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+/* Ensure pane backgrounds match the theme */
+.flow-pane {
+    -fx-background-color: #065584;
+}
+
+/* Style for text fields and buttons */
+.text-field {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #022940;
+    -fx-text-fill: white;
+}

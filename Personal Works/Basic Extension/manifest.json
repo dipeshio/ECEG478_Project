@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Instagram Follow Analyzer",
+  "version": "1.0",
+  "description": "Analyze who you follow vs who follows you back on Instagram",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Instagram Follow Analyzer"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.instagram.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "host_permissions": [
+    "*://www.instagram.com/*"
+  ]
+}

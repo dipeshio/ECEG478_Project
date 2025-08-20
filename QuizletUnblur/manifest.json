@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Quizlet Unblur",
+    "version": "1.0",
+    "description": "Removes blur effect and specific elements from Quizlet pages",
+    "permissions": ["scripting"],
+    "host_permissions": ["*://*.quizlet.com/*"],
+    "content_scripts": [
+      {
+        "matches": ["*://*.quizlet.com/*"],
+        "js": ["content.js"],
+        "run_at": "document_idle"
+      }
+    ]
+  }

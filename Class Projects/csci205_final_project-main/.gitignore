@@ -1,0 +1,121 @@
+#
+# .gitignore file for CSCI 205
+#
+# This file tells Git which files should not be shared with your teammates.
+# These are typically files that are:
+#   - Generated when building/running your code
+#   - Specific to your computer or IDE setup
+#   - Operating system files
+#
+# Last updated:
+# CLD - 2018-fall
+# BRK - 2020-fall - added support to ignore Gradle folder
+# LR  - 2025-spring - refreshed based on new standards
+#
+
+#########################
+### Java Source Files ###
+#########################
+
+# Compiled Java files - these are generated when you run your code and shouldn't be shared
+*.class
+
+# Output log files from running your program - these are generated locally
+*.log
+
+# Backup and temporary files created by editors (like "MyCode.java~" or "MyCode.bak")
+*.tmp
+*.bak
+*~
+
+##########################
+### Visual Studio Code ###
+##########################
+
+# Most VSCode settings should stay local to your computer
+.vscode/*
+
+# Editor settings like indentation, formatting
+!.vscode/settings.json
+# Build and test task configurations
+!.vscode/tasks.json
+# Debug configurations for Java programs
+!.vscode/launch.json
+
+# VSCode's local history feature (tracks your changes)
+.history/
+
+#####################
+### IntelliJ IDEA ###
+#####################
+
+# Personal IntelliJ settings that shouldn't be shared with teammates
+# Your window layouts and recent files
+.idea/**/workspace.xml
+# Your personal TODO lists
+.idea/**/tasks.xml
+# Custom spelling dictionaries
+.idea/**/dictionaries
+.idea/libraries/**
+
+# IntelliJ's output directory for compiled code (also used by JavaFX)
+out/
+
+##############
+### Gradle ###
+##############
+
+# Gradle's local files and compiled code
+# Gradle's temporary files and caches
+.gradle/
+# Where Gradle puts compiled code
+build/
+
+# IntelliJ's Gradle configuration files
+# Local Gradle settings
+.idea/**/gradle.xml
+# Local dependency information
+.idea/**/libraries
+
+# Keep these Gradle wrapper files - they ensure everyone uses the same Gradle version
+# Gradle program file
+!gradle/wrapper/gradle-wrapper.jar
+# Gradle version settings
+!gradle/wrapper/gradle-wrapper.properties
+
+#####################
+### Miscellaneous ###
+#####################
+
+# Ignore package files
+*.jar
+*.war
+*.zip
+*.tar.gz
+*.rar
+
+# Ignore virtual machine crash logs
+hs_err_pid*
+replay_pid*
+
+# Files automatically created by Mac OS
+.DS_Store
+._*
+
+# Files automatically created by Windows
+Thumbs.db
+[Dd]esktop.ini
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+
+
+# misc files
+*.lock
+*.iml
+*.bin
+*.properties
+

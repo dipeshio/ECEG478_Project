@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      margin: 0;
+    }
+    
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .results {
+      margin-top: 20px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .count {
+      font-weight: 600;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    
+    .username-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    
+    .username {
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      font-size: 13px;
+      border-left: 3px solid #ff6b6b;
+    }
+    
+    .status {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      text-align: center;
+    }
+    
+    .status.loading {
+      background: rgba(255, 193, 7, 0.2);
+      border: 1px solid rgba(255, 193, 7, 0.5);
+    }
+    
+    .status.success {
+      background: rgba(40, 167, 69, 0.2);
+      border: 1px solid rgba(40, 167, 69, 0.5);
+    }
+    
+    .status.error {
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid rgba(220, 53, 69, 0.5);
+    }
+    
+    .instructions {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+    
+    .step {
+      margin-bottom: 8px;
+    }
+    
+    .step strong {
+      color: #ffd700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Follow Analyzer</h1>
+    
+    <div class="instructions">
+      <div class="step"><strong>Step 1:</strong> Go to your Instagram profile</div>
+      <div class="step"><strong>Step 2:</strong> Open "followers" tab and click "Read Followers"</div>
+      <div class="step"><strong>Step 3:</strong> Open "following" tab and click "Read Following"</div>
+      <div class="step"><strong>Step 4:</strong> Click "Show Difference" to see who doesn't follow back</div>
+    </div>
+    
+    <div class="button-group">
+      <button id="readFollowers">📥 Read Followers</button>
+      <button id="readFollowing">📤 Read Following</button>
+      <button id="showDifference">🔍 Show Who Doesn't Follow Back</button>
+    </div>
+    
+    <div id="status"></div>
+    <div id="results"></div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

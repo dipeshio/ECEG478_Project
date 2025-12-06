@@ -73,249 +73,157 @@ function startBulkScrape({ startDate, endDate }) {
     // Get the active tab to use for scraping
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         if (tabs[0]) {
-            bulkScrapeState = {
-                isActive: true,
-                queue: queue,
-                total: queue.length,
-                current: 0,
-                results: [],
-                tabId: tabs[0].id
+            try {
+                const result = await chrome.storage.local.get(['shiftData', 'lastScraped']);
+                return {
+                    success: true,
+                    data: result.shiftData || {},
+                    lastScraped: result.lastScraped
+                };
+            } catch (error) {
+                console.error('Error getting shifts:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        /**
+         * Get user's class calendar
+         */
+        async function getUserCalendar() {
+            try {
+                const result = await chrome.storage.local.get(['userCalendar']);
+                return {
+                    success: true,
+                    calendar: result.userCalendar || getDefaultCalendar()
+                };
+            } catch (error) {
+                console.error('Error getting calendar:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        /**
+         * Save user's class calendar
+         */
+        async function saveUserCalendar(calendar) {
+            try {
+                await chrome.storage.local.set({ userCalendar: calendar });
+                return { success: true };
+            } catch (error) {
+                console.error('Error saving calendar:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        /**
+         * Default calendar based on the provided User_Calendar.png
+         * This represents the user's class schedule for Spring 2026
+         * School starts January 20th, 2026 (Tuesday)
+         */
+        function getDefaultCalendar() {
+            return {
+                schoolYearStart: '2026-01-20',
+                classes: [
+                    // Monday classes
+                    { day: 'Monday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+                    { day: 'Monday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
+                    { day: 'Monday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+                    { day: 'Monday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
+
+                    // Tuesday classes  
+                    { day: 'Tuesday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
+                    { day: 'Tuesday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
+                    { day: 'Tuesday', startTime: '13:00', endTime: '14:50', name: 'ECEG 310 Lab', location: 'ELC 228' },
+
+                    // Wednesday classes
+                    { day: 'Wednesday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+                    { day: 'Wednesday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
+                    { day: 'Wednesday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+                    { day: 'Wednesday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
+
+                    // Thursday classes
+                    { day: 'Thursday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
+                    { day: 'Thursday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
+                    { day: 'Thursday', startTime: '14:00', endTime: '15:50', name: 'CSCI 315 Lab', location: 'Breakiron 164' },
+
+                    // Friday classes
+                    { day: 'Friday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+                    { day: 'Friday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+                    { day: 'Friday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' }
+                ],
+                // No classes on Saturday/Sunday
+                holidays: [
+                    { date: '2026-01-19', name: 'MLK Day' }
+                ]
             };
-            processNextInQueue();
-        } else {
-            console.error('No active tab found for bulk scrape');
         }
-    });
-}
 
-/**
- * Calculate timestamp for a given date string (YYYY-MM-DD)
- * Uses Dec 7, 2025 as an anchor to ensure correct EST midnight timestamp
- */
-function getTimestampForDate(dateString) {
-    const anchorDate = new Date('2025-12-07T12:00:00'); // Noon to avoid DST/Timezone edge cases
-    const anchorTimestamp = 1765083600;
-
-    const targetDate = new Date(dateString + 'T12:00:00');
-
-    // Calculate difference in days
-    const diffTime = targetDate.getTime() - anchorDate.getTime();
-    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-    // Calculate target timestamp
-    return anchorTimestamp + (diffDays * 86400);
-}
-
-/**
- * Process the next date in the queue
- */
-function processNextInQueue() {
-    if (bulkScrapeState.queue.length === 0) {
-        // Done!
-        bulkScrapeState.isActive = false;
-        chrome.runtime.sendMessage({
-            action: 'BULK_SCRAPE_COMPLETE',
-            data: { count: bulkScrapeState.total }
-        });
-        return;
-    }
-
-    const nextDate = bulkScrapeState.queue.shift();
-    bulkScrapeState.current++;
-
-    // Notify popup of progress
-    chrome.runtime.sendMessage({
-        action: 'BULK_SCRAPE_PROGRESS',
-        data: {
-            current: bulkScrapeState.current,
-            total: bulkScrapeState.total,
-            date: nextDate
+        /**
+         * Clear all stored data
+         */
+        async function clearAllData() {
+            try {
+                await chrome.storage.local.clear();
+                return { success: true };
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                return { success: false, error: error.message };
+            }
         }
-    });
 
-    // Construct URL with timestamp
-    const timestamp = getTimestampForDate(nextDate);
-    const url = `https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=${timestamp}`;
+        /**
+         * Get statistics about stored data
+         */
+        async function getStats() {
+            try {
+                const result = await chrome.storage.local.get(['shiftData', 'lastScraped', 'userCalendar']);
 
-    console.log(`Navigating to ${nextDate} (Timestamp: ${timestamp})`);
+                const shiftData = result.shiftData || {};
+                const dates = Object.keys(shiftData);
+                let totalShifts = 0;
+                let availableShifts = 0;
+                let yourShifts = 0;
 
-    // Navigate the tab
-    if (bulkScrapeState.tabId) {
-        chrome.tabs.update(bulkScrapeState.tabId, { url: url });
-    }
-}
-
-/**
- * Handle newly scraped shifts notification
- */
-function handleShiftsScraped(data) {
-    console.log(`Background: Received ${data.shiftCount} shifts for ${data.date}`);
-
-    // Update badge to show recent activity
-    chrome.action.setBadgeText({ text: '✓' });
-    chrome.action.setBadgeBackgroundColor({ color: '#4CAF50' });
-
-    // Clear badge after 3 seconds
-    setTimeout(() => {
-        chrome.action.setBadgeText({ text: '' });
-    }, 3000);
-}
-
-/**
- * Get all stored shift data
- */
-async function getAllShifts() {
-    try {
-        const result = await chrome.storage.local.get(['shiftData', 'lastScraped']);
-        return {
-            success: true,
-            data: result.shiftData || {},
-            lastScraped: result.lastScraped
-        };
-    } catch (error) {
-        console.error('Error getting shifts:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-/**
- * Get user's class calendar
- */
-async function getUserCalendar() {
-    try {
-        const result = await chrome.storage.local.get(['userCalendar']);
-        return {
-            success: true,
-            calendar: result.userCalendar || getDefaultCalendar()
-        };
-    } catch (error) {
-        console.error('Error getting calendar:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-/**
- * Save user's class calendar
- */
-async function saveUserCalendar(calendar) {
-    try {
-        await chrome.storage.local.set({ userCalendar: calendar });
-        return { success: true };
-    } catch (error) {
-        console.error('Error saving calendar:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-/**
- * Default calendar based on the provided User_Calendar.png
- * This represents the user's class schedule for Spring 2026
- * School starts January 20th, 2026 (Tuesday)
- */
-function getDefaultCalendar() {
-    return {
-        schoolYearStart: '2026-01-20',
-        classes: [
-            // Monday classes
-            { day: 'Monday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
-            { day: 'Monday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
-            { day: 'Monday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
-            { day: 'Monday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
-
-            // Tuesday classes  
-            { day: 'Tuesday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
-            { day: 'Tuesday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
-            { day: 'Tuesday', startTime: '13:00', endTime: '14:50', name: 'ECEG 310 Lab', location: 'ELC 228' },
-
-            // Wednesday classes
-            { day: 'Wednesday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
-            { day: 'Wednesday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
-            { day: 'Wednesday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
-            { day: 'Wednesday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
-
-            // Thursday classes
-            { day: 'Thursday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
-            { day: 'Thursday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
-            { day: 'Thursday', startTime: '14:00', endTime: '15:50', name: 'CSCI 315 Lab', location: 'Breakiron 164' },
-
-            // Friday classes
-            { day: 'Friday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
-            { day: 'Friday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
-            { day: 'Friday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' }
-        ],
-        // No classes on Saturday/Sunday
-        holidays: [
-            { date: '2026-01-19', name: 'MLK Day' }
-        ]
-    };
-}
-
-/**
- * Clear all stored data
- */
-async function clearAllData() {
-    try {
-        await chrome.storage.local.clear();
-        return { success: true };
-    } catch (error) {
-        console.error('Error clearing data:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-/**
- * Get statistics about stored data
- */
-async function getStats() {
-    try {
-        const result = await chrome.storage.local.get(['shiftData', 'lastScraped', 'userCalendar']);
-
-        const shiftData = result.shiftData || {};
-        const dates = Object.keys(shiftData);
-        let totalShifts = 0;
-        let availableShifts = 0;
-        let yourShifts = 0;
-
-        dates.forEach(date => {
-            const dayData = shiftData[date];
-            if (dayData && dayData.shifts) {
-                totalShifts += dayData.shifts.length;
-                dayData.shifts.forEach(shift => {
-                    if (shift.status === 'available' || shift.status === 'dropped') {
-                        availableShifts++;
-                    }
-                    if (shift.status === 'your_shift') {
-                        yourShifts++;
+                dates.forEach(date => {
+                    const dayData = shiftData[date];
+                    if (dayData && dayData.shifts) {
+                        totalShifts += dayData.shifts.length;
+                        dayData.shifts.forEach(shift => {
+                            if (shift.status === 'available' || shift.status === 'dropped') {
+                                availableShifts++;
+                            }
+                            if (shift.status === 'your_shift') {
+                                yourShifts++;
+                            }
+                        });
                     }
                 });
+
+                return {
+                    success: true,
+                    stats: {
+                        daysScraped: dates.length,
+                        totalShifts,
+                        availableShifts,
+                        yourShifts,
+                        lastScraped: result.lastScraped,
+                        hasCalendar: !!result.userCalendar
+                    }
+                };
+            } catch (error) {
+                console.error('Error getting stats:', error);
+                return { success: false, error: error.message };
             }
-        });
-
-        return {
-            success: true,
-            stats: {
-                daysScraped: dates.length,
-                totalShifts,
-                availableShifts,
-                yourShifts,
-                lastScraped: result.lastScraped,
-                hasCalendar: !!result.userCalendar
-            }
-        };
-    } catch (error) {
-        console.error('Error getting stats:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-// Initialize on install
-chrome.runtime.onInstalled.addListener(() => {
-    console.log('Shift Scheduler Optimizer installed');
-
-    // Set default calendar
-    chrome.storage.local.get(['userCalendar'], (result) => {
-        if (!result.userCalendar) {
-            chrome.storage.local.set({ userCalendar: getDefaultCalendar() });
         }
-    });
-});
+
+        // Initialize on install
+        chrome.runtime.onInstalled.addListener(() => {
+            console.log('Shift Scheduler Optimizer installed');
+
+            // Set default calendar
+            chrome.storage.local.get(['userCalendar'], (result) => {
+                if (!result.userCalendar) {
+                    chrome.storage.local.set({ userCalendar: getDefaultCalendar() });
+                }
+            });
+        });

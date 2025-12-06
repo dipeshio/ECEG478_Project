@@ -4,7 +4,6 @@
    ======================================== */
 
 :root {
-    /* Color Palette */
     --primary: #2563eb;
     --primary-dark: #1d4ed8;
     --primary-light: #3b82f6;
@@ -12,8 +11,6 @@
     --accent-dark: #059669;
     --warning: #f59e0b;
     --danger: #ef4444;
-
-    /* Neutrals */
     --bg-primary: #ffffff;
     --bg-secondary: #f8fafc;
     --bg-tertiary: #f1f5f9;
@@ -22,8 +19,6 @@
     --text-primary: #1e293b;
     --text-secondary: #64748b;
     --text-muted: #94a3b8;
-
-    /* Status Colors */
     --status-available: #dcfce7;
     --status-available-text: #166534;
     --status-taken: #fef3c7;
@@ -34,8 +29,6 @@
     --status-dropped-text: #9d174d;
     --status-optimal: #fef3c7;
     --status-optimal-border: #f59e0b;
-
-    /* Sizing */
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
@@ -43,7 +36,6 @@
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* Reset & Base */
 * {
     margin: 0;
     padding: 0;
@@ -68,7 +60,6 @@ body {
     overflow: hidden;
 }
 
-/* Header */
 .header {
     padding: 16px 20px 12px;
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
@@ -107,7 +98,6 @@ body {
     opacity: 0.85;
 }
 
-/* Dashboard Stats */
 .dashboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -160,7 +150,6 @@ body {
     margin-top: 2px;
 }
 
-/* Progress Section */
 .progress-section {
     padding: 10px 16px;
     background: var(--bg-secondary);
@@ -199,10 +188,8 @@ body {
     background: var(--accent);
     border-radius: 1px;
     left: 86.67%;
-    /* 13 / 15 = ~86.67% of max */
 }
 
-/* Tabs */
 .tabs {
     display: flex;
     background: var(--bg-secondary);
@@ -233,7 +220,6 @@ body {
     border-bottom-color: var(--primary);
 }
 
-/* Tab Content */
 .tab-content {
     display: none;
     flex: 1;
@@ -245,7 +231,6 @@ body {
     display: block;
 }
 
-/* Table Controls */
 .table-controls {
     display: flex;
     gap: 8px;
@@ -269,7 +254,6 @@ body {
     border-color: var(--primary-light);
 }
 
-/* Spreadsheet Table */
 .spreadsheet-container {
     overflow: auto;
     max-height: 280px;
@@ -318,7 +302,6 @@ body {
     background: #fef9c3;
 }
 
-/* Status Pills */
 .status-pill {
     display: inline-block;
     padding: 2px 8px;
@@ -354,7 +337,6 @@ body {
     color: var(--text-muted);
 }
 
-/* Score Badge */
 .score-badge {
     display: inline-flex;
     align-items: center;
@@ -378,7 +360,6 @@ body {
     color: #991b1b;
 }
 
-/* Empty Row */
 .empty-row td {
     text-align: center;
     color: var(--text-muted);
@@ -386,7 +367,6 @@ body {
     font-style: italic;
 }
 
-/* Recommendation Summary */
 .recommendation-summary {
     padding: 12px 16px;
     background: linear-gradient(to right, #eff6ff, #f0fdfa);
@@ -399,7 +379,6 @@ body {
     margin: 0;
 }
 
-/* Reasons List */
 .reasons-list {
     font-size: 10px;
     color: var(--text-secondary);
@@ -420,7 +399,6 @@ body {
     color: var(--primary);
 }
 
-/* Settings Tab */
 .settings-section {
     padding: 14px 16px;
     border-bottom: 1px solid var(--border);
@@ -468,9 +446,11 @@ body {
 .class-item {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 5px 8px;
     font-size: 11px;
     border-bottom: 1px solid var(--border);
+    gap: 8px;
 }
 
 .class-item:last-child {
@@ -479,10 +459,35 @@ body {
 
 .class-item .class-name {
     font-weight: 500;
+    flex: 1;
 }
 
 .class-item .class-time {
     color: var(--text-muted);
+    font-size: 10px;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+}
+
+.btn-remove:hover {
+    opacity: 1;
+}
+
+.empty-message {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 12px;
 }
 
 .settings-info {
@@ -494,13 +499,11 @@ body {
     margin: 4px 0;
 }
 
-/* Button Row */
 .button-row {
     display: flex;
     gap: 8px;
 }
 
-/* Action Footer */
 .actions {
     display: flex;
     gap: 8px;
@@ -510,7 +513,6 @@ body {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
 }
 
-/* Buttons */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -561,7 +563,6 @@ body {
     font-size: 14px;
 }
 
-/* Toast Notification */
 .toast {
     position: fixed;
     bottom: 80px;
@@ -585,7 +586,6 @@ body {
     transform: translateX(-50%) translateY(0);
 }
 
-/* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -604,7 +604,6 @@ body {
     background: var(--text-muted);
 }
 
-/* Settings Inputs */
 .setting-input {
     padding: 6px 10px;
     font-size: 12px;
@@ -623,7 +622,6 @@ body {
     width: 70px;
 }
 
-/* Toggle Switch */
 .toggle-row {
     align-items: center;
 }
@@ -674,201 +672,6 @@ body {
     transform: translateX(20px);
 }
 
-/* Add Class Form */
-.add-class-form {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-}
-
-.add-class-form .setting-input[type="time"] {
-    min-width: 100px;
-}
-
-/* Button Row */
-.button-row {
-    display: flex;
-    gap: 8px;
-}
-
-/* Action Footer */
-.actions {
-    display: flex;
-    gap: 8px;
-    padding: 12px 16px;
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border);
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Buttons */
-.btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.btn-primary {
-    flex: 1;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-secondary {
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    border: 1px solid var(--border);
-}
-
-.btn-secondary:hover {
-    background: var(--border);
-}
-
-.btn-danger {
-    background: white;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-}
-
-.btn-danger:hover {
-    background: #fef2f2;
-}
-
-.btn-icon {
-    font-size: 14px;
-}
-
-/* Toast Notification */
-.toast {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%) translateY(20px);
-    padding: 10px 20px;
-    background: var(--text-primary);
-    color: white;
-    border-radius: var(--radius-md);
-    font-size: 12px;
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    z-index: 100;
-}
-
-.toast.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-dark);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-}
-
-/* Settings Inputs */
-.setting-input {
-    padding: 6px 10px;
-    font-size: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: white;
-    min-width: 80px;
-}
-
-.setting-input:focus {
-    outline: none;
-    border-color: var(--primary-light);
-}
-
-.setting-input[type="number"] {
-    width: 70px;
-}
-
-/* Toggle Switch */
-.toggle-row {
-    align-items: center;
-}
-
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--border-dark);
-    border-radius: 24px;
-    transition: 0.3s;
-}
-
-.toggle-slider::before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.3s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-switch input:checked+.toggle-slider {
-    background: var(--primary);
-}
-
-.toggle-switch input:checked+.toggle-slider::before {
-    transform: translateX(20px);
-}
-
-/* Add Class Form */
 .add-class-form {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
@@ -887,441 +690,7 @@ body {
     padding: 8px;
 }
 
-/* Class Item with Remove Button */
-.class-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 8px;
-    font-size: 11px;
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-}
-
-.class-item .class-name {
-    font-weight: 500;
-    flex: 1;
-}
-
-.class-item .class-time {
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.btn-remove {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-}
-
-.btn-remove:hover {
-    opacity: 1;
-}
-
-.empty-message {
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 12px;
-}
-
-/* Earnings Tab Styles */
-.earnings-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 12px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-}
-
-.earnings-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-}
-
-.earnings-card.accent {
-    background: linear-gradient(to bottom, #ecfdf5, white);
-    border-color: var(--accent);
-}
-
-.earnings-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    letter-spacing: 0.3px;
-}
-
-.earnings-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.earnings-card.accent .earnings-value {
-    color: var(--accent);
-}
-
-.tax-breakdown {
-    padding: 8px 12px;
-    background: var(--bg-tertiary);
-    font-size: 11px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border-dark);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--text-muted);
-}
-
-/* Settings Inputs */
-.setting-input {
-    padding: 6px 10px;
-    font-size: 12px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: white;
-    min-width: 80px;
-}
-
-.setting-input:focus {
-    outline: none;
-    border-color: var(--primary-light);
-}
-
-.setting-input[type="number"] {
-    width: 70px;
-}
-
-/* Toggle Switch */
-.toggle-row {
-    align-items: center;
-}
-
-.toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
-}
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--border-dark);
-    border-radius: 24px;
-    transition: 0.3s;
-}
-
-.toggle-slider::before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.3s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-switch input:checked+.toggle-slider {
-    background: var(--primary);
-}
-
-.toggle-switch input:checked+.toggle-slider::before {
-    transform: translateX(20px);
-}
-
-/* Add Class Form */
-.add-class-form {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-}
-
-.add-class-form .setting-input[type="time"] {
-    min-width: 100px;
-}
-
-.add-class-form .btn {
-    grid-column: span 2;
-    padding: 8px;
-}
-
-/* Class Item with Remove Button */
-.class-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 8px;
-    font-size: 11px;
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-}
-
-.class-item .class-name {
-    font-weight: 500;
-    flex: 1;
-}
-
-.class-item .class-time {
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.btn-remove {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-}
-
-.btn-remove:hover {
-    opacity: 1;
-}
-
-.empty-message {
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 12px;
-}
-
-/* Earnings Tab Styles */
-.earnings-summary {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 12px;
-    background: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
-}
-
-.earnings-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    background: white;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-}
-
-.earnings-card.accent {
-    background: linear-gradient(to bottom, #ecfdf5, white);
-    border-color: var(--accent);
-}
-
-.earnings-label {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: var(--text-secondary);
-    letter-spacing: 0.3px;
-}
-
-.earnings-value {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-primary);
-}
-
-.earnings-card.accent .earnings-value {
-    color: var(--accent);
-}
-
-.tax-breakdown {
-    padding: 8px 12px;
-    background: var(--bg-tertiary);
-    font-size: 11px;
-    color: var(--text-secondary);
-    border-bottom: 1px solid var(--border);
-    text-align: center;
-}
-
-#earningsTable td:nth-child(3),
-#earningsTable td:nth-child(4),
-#earningsTable td:nth-child(5) {
-    font-family: 'Consolas', monospace;
-    text-align: right;
-}
-
-#earningsTable .positive {
-    color: var(--accent-dark);
-}
-
-/* Date Range Filter */
-.date-range-filter {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    background: var(--bg-tertiary);
-    border-bottom: 1px solid var(--border);
-    flex-wrap: wrap;
-}
-
-.date-range-filter label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.date-range-filter input[type="date"] {
-    padding: 6px 10px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 12px;
-    background: var(--bg-primary);
-}
-
-.date-range-filter input[type="date"]:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-
-.toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--border-dark);
-    border-radius: 24px;
-    transition: 0.3s;
-}
-
-.toggle-slider::before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: 0.3s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.toggle-switch input:checked+.toggle-slider {
-    background: var(--primary);
-}
-
-.toggle-switch input:checked+.toggle-slider::before {
-    transform: translateX(20px);
-}
-
-/* Add Class Form */
-.add-class-form {
-    display: grid;
-    grid-template-columns: 1fr 1.5fr;
-    gap: 6px;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-}
-
-.add-class-form .setting-input[type="time"] {
-    min-width: 100px;
-}
-
-.add-class-form .btn {
-    grid-column: span 2;
-    padding: 8px;
-}
-
-/* Class Item with Remove Button */
-.class-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 8px;
-    font-size: 11px;
-    border-bottom: 1px solid var(--border);
-    gap: 8px;
-}
-
-.class-item .class-name {
-    font-weight: 500;
-    flex: 1;
-}
-
-.class-item .class-time {
-    color: var(--text-muted);
-    font-size: 10px;
-}
-
-.btn-remove {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 16px;
-    cursor: pointer;
-    padding: 0 4px;
-    line-height: 1;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-}
-
-.btn-remove:hover {
-    opacity: 1;
-}
-
-.empty-message {
-    text-align: center;
-    color: var(--text-muted);
-    font-style: italic;
-    padding: 12px;
-}
-
-/* Earnings Tab Styles */
+/* Earnings Tab */
 .earnings-summary {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1418,12 +787,12 @@ body {
     color: var(--text-muted);
 }
 
+/* Compact Buttons */
 .btn-small {
     padding: 6px 12px !important;
     font-size: 11px !important;
 }
 
-/* Compact buttons for 3-button footer */
 .btn-compact {
     padding: 10px 12px !important;
     font-size: 12px !important;
@@ -1434,7 +803,7 @@ body {
     margin-right: 4px;
 }
 
-/* Accent button (for Weekly View) */
+/* Accent Button */
 .btn-accent {
     background: linear-gradient(135deg, var(--accent), var(--accent-dark));
     color: white;

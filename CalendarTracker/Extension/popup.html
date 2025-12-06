@@ -10,68 +10,70 @@
 
 <body>
     <div class="container">
-        <!-- Header Section -->
+        <!-- Header -->
         <header class="header">
             <div class="header-content">
-                <h1>📅 Shift Optimizer</h1>
-                <span class="status-badge" id="statusBadge">Ready</span>
+                <h1>
+                    <span>📅</span> Shift Optimizer
+                </h1>
+                <span class="status-badge success" id="statusBadge">Active</span>
             </div>
-            <p class="subtitle">Bucknell Library Circulation</p>
+            <div class="subtitle">Bucknell Conportal Assistant</div>
         </header>
 
-        <!-- Dashboard Summary -->
-        <section class="dashboard" id="dashboard">
+        <!-- Dashboard Stats -->
+        <div class="dashboard">
             <div class="stat-card primary">
                 <span class="stat-value" id="currentHours">0</span>
-                <span class="stat-label">Current Hours</span>
+                <span class="stat-label">Hours</span>
             </div>
             <div class="stat-card">
                 <span class="stat-value" id="targetHours">13-15</span>
-                <span class="stat-label">Target Hours</span>
+                <span class="stat-label">Target</span>
             </div>
-            <div class="stat-card">
+            <div class="stat-card accent">
                 <span class="stat-value" id="availableShifts">0</span>
                 <span class="stat-label">Available</span>
             </div>
-            <div class="stat-card accent">
+            <div class="stat-card">
                 <span class="stat-value" id="optimalCount">0</span>
-                <span class="stat-label">Recommended</span>
+                <span class="stat-label">Optimal</span>
             </div>
-        </section>
+        </div>
 
         <!-- Progress Bar -->
-        <section class="progress-section">
+        <div class="progress-section">
             <div class="progress-header">
                 <span>Weekly Progress</span>
-                <span id="progressPercent">0%</span>
+                <span id="progressPercent">0% of target</span>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill"></div>
-                <div class="progress-target" id="progressTarget"></div>
+                <div class="progress-target" id="progressTarget" title="Target Goal"></div>
             </div>
-        </section>
+        </div>
 
-        <!-- Tabs -->
-        <nav class="tabs">
+        <!-- Navigation Tabs -->
+        <div class="tabs">
             <button class="tab-btn active" data-tab="shifts">All Shifts</button>
             <button class="tab-btn" data-tab="recommended">Recommended</button>
             <button class="tab-btn" data-tab="your-shifts">Your Shifts</button>
             <button class="tab-btn" data-tab="earnings">Earnings</button>
             <button class="tab-btn" data-tab="settings">Settings</button>
-        </nav>
+        </div>
 
         <!-- Tab Content: All Shifts -->
         <section class="tab-content active" id="shifts-tab">
             <div class="table-controls">
                 <select id="dayFilter" class="filter-select">
                     <option value="">All Days</option>
-                    <option value="Sunday">Sunday</option>
                     <option value="Monday">Monday</option>
                     <option value="Tuesday">Tuesday</option>
                     <option value="Wednesday">Wednesday</option>
                     <option value="Thursday">Thursday</option>
                     <option value="Friday">Friday</option>
                     <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
                 </select>
                 <select id="statusFilter" class="filter-select">
                     <option value="">All Status</option>
@@ -270,15 +272,50 @@
                     <input type="text" id="newClassName" class="setting-input"
                         placeholder="Class Name (e.g., MATH 280)">
                     <input type="time" id="newClassStart" class="setting-input" value="10:00">
+                    <input type="time" id="newClassEnd" class="setting-input" value="10:50">
+                    <button id="addClassBtn" class="btn btn-secondary">+ Add</button>
                 </div>
+            </div>
 
-                <div class="settings-section">
-                    <div class="settings-info">
-                        <p><strong>Last Scraped:</strong> <span id="lastScraped">Never</span></p>
-                        <p><strong>Days Loaded:</strong> <span id="daysLoaded">0</span></p>
-                        <p><strong>Max Weekly Hours:</strong> 20 (University Rule)</p>
+            <!-- Bulk Scrape Section -->
+            <div class="settings-section">
+                <h3>🔄 Bulk Scrape</h3>
+                <p class="settings-hint">Automatically scrape a range of dates.</p>
+                <div class="date-range-filter" style="border: none; padding: 0; background: none; margin-bottom: 10px;">
+                    <label for="bulkStartDate">Start:</label>
+                    <input type="date" id="bulkStartDate">
+                    <label for="bulkEndDate">End:</label>
+                    <input type="date" id="bulkEndDate">
+                </div>
+                <button id="startBulkScrapeBtn" class="btn btn-primary" style="width: 100%;">Start Auto-Scrape</button>
+
+                <div id="bulkScrapeProgress" style="display: none; margin-top: 10px;">
+                    <div class="progress-header">
+                        <span id="bulkScrapeStatus">Scraping...</span>
+                        <span id="bulkScrapePercent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="bulkScrapeFill" style="width: 0%"></div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Data Management Section -->
+            <div class="settings-section">
+                <h3>🗄️ Data Management</h3>
+                <div class="button-row">
+                    <button id="clearDataBtn" class="btn btn-danger">Clear Shift Data</button>
+                    <button id="exportDataBtn" class="btn btn-secondary">Export Data</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-info">
+                    <p><strong>Last Scraped:</strong> <span id="lastScraped">Never</span></p>
+                    <p><strong>Days Loaded:</strong> <span id="daysLoaded">0</span></p>
+                    <p><strong>Max Weekly Hours:</strong> 20 (University Rule)</p>
+                </div>
+            </div>
         </section>
 
         <!-- Action Buttons - 3 compact buttons -->

@@ -254,10 +254,18 @@ const Optimizer = (function () {
     /**
      * Calculate hours for a specific week only (Sunday to Saturday)
      * @param {Object} shiftData - All shift data keyed by date
-     * @param {Date} weekDate - Optional date to determine which week (defaults to current)
+     * @param {Date} weekDate - Optional date to determine which week (defaults to first date in data or current)
      * @returns {Object} { weeklyHours, yourShifts, weekRange }
      */
     function calculateWeeklyHours(shiftData, weekDate) {
+        // If no weekDate provided, infer from the first date in the data
+        if (!weekDate) {
+            const dates = Object.keys(shiftData).sort();
+            if (dates.length > 0) {
+                weekDate = new Date(dates[0] + 'T12:00:00');
+            }
+        }
+
         const weekRange = getCurrentWeekRange(weekDate);
         let weeklyHours = 0;
         const yourShifts = [];

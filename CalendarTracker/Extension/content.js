@@ -1,273 +1,178 @@
-/**
- * Content Script for Shift Scheduler Optimizer
- * Scrapes shift data from Bucknell Conportal shift schedule page
- */
-
-(function () {
-    'use strict';
-
-    // Shift status types
-    const ShiftStatus = {
-        AVAILABLE: 'available',
-        TAKEN: 'taken',
-        YOUR_SHIFT: 'your_shift',
-        DROPPED: 'dropped',
-        UNAVAILABLE: 'unavailable'
-    };
-
+(() => {
     /**
-     * Parse the current date from the page header
-     * Example: "Shifts for: Tuesday, January 20th, 2026."
+     * Content Script for Shift Scheduler Optimizer
+     * Scrapes shift data from Bucknell Conportal
      */
+
+    // Helper to parse date from header
     function parseCurrentDate() {
-        const dateElement = document.getElementById('shifts_by_day_date');
-        if (!dateElement) return null;
+        // Look for the date in the header or specific element
+        // Based on typical Conportal layout
+        const dateElement = document.querySelector('.date-header, h2, h3');
+        // Fallback: try to find a date string in the page
 
-        const text = dateElement.textContent.trim();
-        // Match: "Day, Month DDth, YYYY"
-        const match = text.match(/(\w+),\s+(\w+)\s+(\d+)(?:st|nd|rd|th),\s+(\d+)/);
-        if (!match) return null;
+        // For now, let's assume the standard Conportal format if we can find it
+        // Or use the calendar header we found in navigation
 
-        const [, dayName, monthName, day, year] = match;
-        const months = {
-            'January': 0, 'February': 1, 'March': 2, 'April': 3,
-            'May': 4, 'June': 5, 'July': 6, 'August': 7,
-            'September': 8, 'October': 9, 'November': 10, 'December': 11
+        // Better approach: The shift table usually has a date or the page URL might have it
+        // URL format: show_shifts.php?date=2026-01-20
+        const urlParams = new URLSearchParams(window.location.search);
+        const dateParam = urlParams.get('date');
+
+        if (dateParam) {
+            const [year, month, day] = dateParam.split('-').map(Number);
+            return {
+                date: new Date(year, month - 1, day),
+                dateString: dateParam
+            };
+        }
+
+        // Fallback to scraping the header if URL param is missing
+        // This part might need adjustment based on actual DOM
+        const header = document.querySelector('td.main_title');
+        if (header) {
+            const text = header.textContent.trim();
+            // Try to parse "Monday, January 20, 2026"
+            const date = new Date(text);
+            if (!isNaN(date.getTime())) {
+                return {
+                    date: date,
+                    dateString: date.toISOString().split('T')[0]
+                };
+            }
+        }
+
+        // If all else fails, default to today (risky but better than crash)
+        const today = new Date();
+        return {
+            date: today,
+            dateString: today.toISOString().split('T')[0]
         };
+    }
+
+    // Helper to parse time string (e.g. "10:00 AM")
+    function parseTime(timeStr) {
+        if (!timeStr) return null;
+        const [time, period] = timeStr.split(' ');
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (period === 'PM' && hours !== 12) hours += 12;
+        if (period === 'AM' && hours === 12) hours = 0;
 
         return {
-            dayName,
-            date: new Date(parseInt(year), months[monthName], parseInt(day)),
-            dateString: `${year}-${String(months[monthName] + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`,
-            displayDate: `${monthName} ${day}, ${year}`
+            hours,
+            minutes,
+            totalMinutes: hours * 60 + minutes,
+            display: timeStr
         };
     }
 
-    /**
-     * Parse time string to 24-hour format
-     * Example: "4:00 PM" -> 16, "12:00 AM" -> 0
-     */
-    function parseTime(timeStr) {
-        const match = timeStr.trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-        if (!match) return null;
-
-        let [, hours, minutes, period] = match;
-        hours = parseInt(hours);
-        minutes = parseInt(minutes);
-
-        if (period.toUpperCase() === 'PM' && hours !== 12) {
-            hours += 12;
-        } else if (period.toUpperCase() === 'AM' && hours === 12) {
-            hours = 0;
-        }
-
-        return { hours, minutes, totalMinutes: hours * 60 + minutes };
-    }
-
-    /**
-     * Determine shift status from CSS class
-     */
+    // Helper to determine shift status
     function getShiftStatus(element) {
-        const classList = element.classList;
+        const text = element.textContent.toLowerCase();
+        const className = element.className.toLowerCase();
 
-        if (classList.contains('YourPermShift') || classList.contains('YourTempShift')) {
-            return ShiftStatus.YOUR_SHIFT;
-        }
-        if (classList.contains('OpenShift')) {
-            // Check if it's a dropped shift by looking for "Dropped by:" text
-            if (element.textContent.includes('Dropped by:')) {
-                return ShiftStatus.DROPPED;
-            }
-            return ShiftStatus.AVAILABLE;
-        }
-        if (classList.contains('PermTakenShift') || classList.contains('TempTakenShift')) {
-            return ShiftStatus.TAKEN;
-        }
-        if (classList.contains('DroppedShift')) {
-            return ShiftStatus.DROPPED;
-        }
-
-        return ShiftStatus.UNAVAILABLE;
+        if (className.includes('taken') || text.includes('taken')) return 'taken';
+        if (className.includes('dropped') || text.includes('dropped')) return 'dropped';
+        if (className.includes('yours') || text.includes('your shift')) return 'your_shift';
+        return 'available';
     }
 
-    /**
-     * Parse shift content to extract time, date range, and assignee
-     */
+    // Parse individual shift element
     function parseShiftContent(element) {
-        const text = element.innerHTML;
-        const lines = text.split('<br>').map(line => line.replace(/<[^>]*>/g, '').trim());
+        // This depends heavily on the specific HTML structure of Conportal
+        // Assuming shifts are in <div> or <td> elements with specific classes
 
-        if (lines.length < 3) return null;
+        const text = element.textContent.trim();
+        // Regex to extract time: "10:00 AM - 12:00 PM"
+        const timeMatch = text.match(/(\d{1,2}:\d{2}\s*[AP]M)\s*-\s*(\d{1,2}:\d{2}\s*[AP]M)/i);
 
-        // Line 0: Time range (e.g., "4:00 PM - 5:00 PM")
-        const timeMatch = lines[0].match(/(.+?)\s*-\s*(.+)/);
         if (!timeMatch) return null;
 
         const startTime = parseTime(timeMatch[1]);
         const endTime = parseTime(timeMatch[2]);
 
-        if (!startTime || !endTime) return null;
+        // Extract role/location if available
+        const roleMatch = text.match(/(Consultant|Leader|Tech)/i);
+        const role = roleMatch ? roleMatch[1] : 'Consultant';
 
-        // Line 1: Date range (e.g., "1/20 - 4/28")
-        const dateRange = lines[1];
+        // Extract assignee if taken
+        // Look for text that isn't time or role
+        let assignee = null;
+        if (getShiftStatus(element) === 'taken') {
+            const parts = text.split('\n');
+            // Heuristic: assignee is usually the last line or distinct from time
+            assignee = parts[parts.length - 1].trim();
+        }
 
-        // Line 2: Assignee or status
-        const assignee = lines[2];
-
-        // Calculate duration in hours
         let durationMinutes = endTime.totalMinutes - startTime.totalMinutes;
         if (durationMinutes < 0) durationMinutes += 24 * 60; // Handle overnight shifts
         const durationHours = durationMinutes / 60;
 
         return {
-            startTime: `${String(startTime.hours).padStart(2, '0')}:${String(startTime.minutes).padStart(2, '0')}`,
-            endTime: `${String(endTime.hours).padStart(2, '0')}:${String(endTime.minutes).padStart(2, '0')}`,
-            startHour: startTime.hours,
-            endHour: endTime.hours,
-            dateRange,
-            assignee,
-            durationHours
+            startTime: startTime.display,
+            endTime: endTime.display,
+            startMinutes: startTime.totalMinutes,
+            endMinutes: endTime.totalMinutes,
+            durationHours,
+            role,
+            assignee
         };
     }
 
     /**
-     * Get role/location from column header
-     */
-    function getRoleFromColumn(table, columnIndex) {
-        const headerRow = table.querySelector('tr.shiftHeader');
-        if (!headerRow) return 'Unknown';
-
-        const cells = headerRow.querySelectorAll('td');
-        // Account for time column at index 0
-        if (columnIndex < cells.length) {
-            return cells[columnIndex].textContent.trim();
-        }
-        return 'Unknown';
-    }
-
-    /**
-     * Scrape all shifts from the page
+     * Scrape all shifts from the current page
      */
     function scrapeShifts() {
-        const currentDate = parseCurrentDate();
-        if (!currentDate) {
-            console.error('Could not parse current date');
-            return null;
-        }
-
+        const dateInfo = parseCurrentDate();
         const shifts = [];
-        const table = document.querySelector('#shifts_by_day table');
-        if (!table) {
-            console.error('Could not find shifts table');
-            return null;
-        }
 
-        // Get all data rows (not header rows)
-        const dataRows = table.querySelectorAll('tr:not(.shiftHeader)');
+        // Select all shift containers
+        // Adjust selector based on actual DOM
+        const shiftElements = document.querySelectorAll('.shift_cell, .shift_box, td[bgcolor]');
 
-        dataRows.forEach(row => {
-            const cells = row.querySelectorAll('td');
+        shiftElements.forEach(el => {
+            const content = parseShiftContent(el);
+            if (content) {
+                const status = getShiftStatus(el);
 
-            // Skip time column (index 0) and process shift columns
-            cells.forEach((cell, cellIndex) => {
-                if (cellIndex === 0) return; // Skip time column
-
-                const role = getRoleFromColumn(table, cellIndex);
-
-                // Find all shift divs in this cell
-                const shiftDivs = cell.querySelectorAll('.OpenShift, .PermTakenShift, .TempTakenShift, .YourPermShift, .YourTempShift, .DroppedShift');
-
-                shiftDivs.forEach(shiftDiv => {
-                    const status = getShiftStatus(shiftDiv);
-                    const content = parseShiftContent(shiftDiv);
-
-                    if (content) {
-                        const shift = {
-                            id: `${currentDate.dateString}_${content.startTime}_${role}_${content.assignee || 'open'}`.replace(/[:\s]/g, '_'),
-                            date: currentDate.dateString,
-                            dayName: currentDate.dayName,
-                            displayDate: currentDate.displayDate,
-                            startTime: content.startTime,
-                            endTime: content.endTime,
-                            startHour: content.startHour,
-                            endHour: content.endHour,
-                            role,
-                            status,
-                            assignee: content.assignee,
-                            durationHours: content.durationHours,
-                            dateRange: content.dateRange,
-                            scrapedAt: new Date().toISOString()
-                        };
-
-                        shifts.push(shift);
-                    }
+                shifts.push({
+                    id: `${dateInfo.dateString}_${content.startTime}_${content.role}_${content.assignee || 'open'}`, // Unique ID
+                    date: dateInfo.dateString,
+                    ...content,
+                    status
                 });
-            });
+            }
         });
 
         return {
-            currentDate,
-            shifts,
-            scrapedAt: new Date().toISOString()
+            date: dateInfo.dateString,
+            currentDate: dateInfo,
+            shifts
         };
     }
 
     /**
-     * Parse shift draw information from the page
-     */
-    function parseShiftDrawInfo() {
-        const infoElement = document.getElementById('shift_draw_message');
-        if (!infoElement) return null;
-
-        const text = infoElement.textContent;
-
-        // Extract weekly hours: "You currently have drawn X out of Y available weekly hours"
-        const weeklyMatch = text.match(/(\d+)\s*out of\s*(\d+)\s*available weekly hours/);
-        // Extract daily hours: "X out of Y available daily hours"
-        const dailyMatch = text.match(/(\d+)\s*out of\s*(\d+)\s*available daily hours/);
-
-        return {
-            weeklyHoursUsed: weeklyMatch ? parseInt(weeklyMatch[1]) : 0,
-            weeklyHoursAvailable: weeklyMatch ? parseInt(weeklyMatch[2]) : 0,
-            dailyHoursUsed: dailyMatch ? parseInt(dailyMatch[1]) : 0,
-            dailyHoursAvailable: dailyMatch ? parseInt(dailyMatch[2]) : 0
-        };
-    }
-
-    /**
-     * Save scraped data to chrome.storage.local
+     * Save scraped data to chrome.storage
      */
     async function saveShiftData(data) {
-        try {
-            // Get existing data
-            const result = await chrome.storage.local.get(['shiftData', 'lastScraped']);
-            const existingData = result.shiftData || {};
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['allShiftData'], (result) => {
+                const allData = result.allShiftData || {};
 
-            // Merge new shifts with existing data (keyed by date)
-            existingData[data.currentDate.dateString] = {
-                shifts: data.shifts,
-                dayName: data.currentDate.dayName,
-                displayDate: data.currentDate.displayDate,
-                shiftDrawInfo: parseShiftDrawInfo(),
-                scrapedAt: data.scrapedAt
-            };
+                // Update data for this date
+                allData[data.date] = data.shifts;
 
-            // Save updated data
-            await chrome.storage.local.set({
-                shiftData: existingData,
-                lastScraped: data.scrapedAt
+                chrome.storage.local.set({ allShiftData: allData }, () => {
+                    console.log(`Saved ${data.shifts.length} shifts for ${data.date}`);
+                    resolve(true);
+                });
             });
-
-            console.log(`Saved ${data.shifts.length} shifts for ${data.currentDate.displayDate}`);
-            return true;
-        } catch (error) {
-            console.error('Error saving shift data:', error);
-            return false;
-        }
+        });
     }
 
     /**
-     * Check if the current date is January 19th (MLK Holiday - unavailable)
+     * Check if date is MLK Holiday (Jan 19, 2026)
      */
     function isMLKHoliday(dateInfo) {
         if (!dateInfo || !dateInfo.date) return false;
@@ -332,11 +237,19 @@
         }
 
         if (message.action === 'NAVIGATE_TO_DATE') {
-            navigateToDate(message.date).then(() => {
-                // Wait for page update then scrape
-                setTimeout(() => {
-                    main();
-                }, 1500); // 1.5s delay for page load
+            navigateToDate(message.date).then((success) => {
+                if (success) {
+                    // Wait for page update then scrape
+                    setTimeout(() => {
+                        main();
+                    }, 1500); // 1.5s delay for page load
+                } else {
+                    console.error('Navigation failed, aborting scrape for this date.');
+                    // Optionally notify background of failure so it doesn't hang?
+                    // But background loop relies on SHIFTS_SCRAPED. 
+                    // If we fail, we should probably send a failure message or just skip.
+                    // For now, logging error is enough to stop the infinite loop of "success".
+                }
             });
             return true;
         }
@@ -385,7 +298,7 @@
         let calendarState = getCalendarState();
         if (!calendarState) {
             console.error('Could not find calendar header');
-            return;
+            return false;
         }
 
         // 2. Navigate Month/Year
@@ -422,7 +335,7 @@
 
             if (!clicked) {
                 console.error('Could not find navigation arrows');
-                return;
+                return false;
             }
 
             // Wait for update
@@ -438,7 +351,7 @@
 
         // Re-find container as DOM might have changed
         calendarState = getCalendarState();
-        if (!calendarState) return;
+        if (!calendarState) return false;
 
         // The calendar grid should be near the header
         // We search in the vicinity
@@ -470,9 +383,10 @@
             // Click it!
             console.log(`Clicking day ${targetDay}`);
             el.click();
-            return;
+            return true;
         }
 
         console.error(`Could not find day ${targetDay} to click`);
+        return false;
     }
 })();

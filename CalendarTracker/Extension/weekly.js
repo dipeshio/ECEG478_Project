@@ -533,7 +533,7 @@
         // Update header stats with 20-hour limit check
         var hoursEl = document.getElementById('currentHours');
         var hoursContainer = document.getElementById('hoursStatContainer');
-        hoursEl.textContent = currentHours;
+        hoursEl.textContent = Math.round(currentHours);
 
         // Check against 20-hour limit
         if (currentHours > MAX_WEEKLY_HOURS) {

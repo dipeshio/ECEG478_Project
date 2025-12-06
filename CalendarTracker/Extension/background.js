@@ -1,7 +1,7 @@
 /**
-* Background Service Worker for Shift Scheduler Optimizer
-* Handles data persistence and state management
-*/
+ * Background Service Worker for Shift Scheduler Optimizer
+ * Handles data persistence and state management
+ */
 
 // Bulk Scrape State
 let bulkScrapeState = {
@@ -9,7 +9,8 @@ let bulkScrapeState = {
     queue: [],
     total: 0,
     current: 0,
-    results: []
+    results: [],
+    tabId: null
 };
 
 // Listen for messages from content script and popup
@@ -18,7 +19,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case 'SHIFTS_SCRAPED':
             handleShiftsScraped(message.data);
             if (bulkScrapeState.isActive) {
-                processNextInQueue();
+                // Wait a bit before next navigation to ensure data is saved
+                setTimeout(processNextInQueue, 1000);
             }
             break;
 
@@ -52,6 +54,101 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
  * Start the bulk scraping process
  */
 function startBulkScrape({ startDate, endDate }) {
+    console.log(`Starting bulk scrape from ${startDate} to ${endDate}`);
+
+    // Generate date queue
+    const queue = [];
+    let current = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Add 12 hours to avoid timezone issues when iterating
+    current.setHours(12, 0, 0, 0);
+    end.setHours(12, 0, 0, 0);
+
+    while (current <= end) {
+        queue.push(current.toISOString().split('T')[0]);
+        current.setDate(current.getDate() + 1);
+    }
+
+    // Get the active tab to use for scraping
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            bulkScrapeState = {
+                isActive: true,
+                queue: queue,
+                total: queue.length,
+                current: 0,
+                results: [],
+                tabId: tabs[0].id
+            };
+            processNextInQueue();
+        } else {
+            console.error('No active tab found for bulk scrape');
+        }
+    });
+}
+
+/**
+ * Calculate timestamp for a given date string (YYYY-MM-DD)
+ * Uses Dec 7, 2025 as an anchor to ensure correct EST midnight timestamp
+ */
+function getTimestampForDate(dateString) {
+    const anchorDate = new Date('2025-12-07T12:00:00'); // Noon to avoid DST/Timezone edge cases
+    const anchorTimestamp = 1765083600;
+
+    const targetDate = new Date(dateString + 'T12:00:00');
+
+    // Calculate difference in days
+    const diffTime = targetDate.getTime() - anchorDate.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    // Calculate target timestamp
+    return anchorTimestamp + (diffDays * 86400);
+}
+
+/**
+ * Process the next date in the queue
+ */
+function processNextInQueue() {
+    if (bulkScrapeState.queue.length === 0) {
+        // Done!
+        bulkScrapeState.isActive = false;
+        chrome.runtime.sendMessage({
+            action: 'BULK_SCRAPE_COMPLETE',
+            data: { count: bulkScrapeState.total }
+        });
+        return;
+    }
+
+    const nextDate = bulkScrapeState.queue.shift();
+    bulkScrapeState.current++;
+
+    // Notify popup of progress
+    chrome.runtime.sendMessage({
+        action: 'BULK_SCRAPE_PROGRESS',
+        data: {
+            current: bulkScrapeState.current,
+            total: bulkScrapeState.total,
+            date: nextDate
+        }
+    });
+
+    // Construct URL with timestamp
+    const timestamp = getTimestampForDate(nextDate);
+    const url = `https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=${timestamp}`;
+
+    console.log(`Navigating to ${nextDate} (Timestamp: ${timestamp})`);
+
+    // Navigate the tab
+    if (bulkScrapeState.tabId) {
+        chrome.tabs.update(bulkScrapeState.tabId, { url: url });
+    }
+}
+
+/**
+ * Handle newly scraped shifts notification
+ */
+function handleShiftsScraped(data) {
     console.log(`Background: Received ${data.shiftCount} shifts for ${data.date}`);
 
     // Update badge to show recent activity

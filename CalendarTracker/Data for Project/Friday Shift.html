@@ -1,0 +1,505 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0062)https://www.linux.bucknell.edu/~conportal/circ/show_shifts.php -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="./Friday Shift_files/default.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="./Friday Shift_files/print.css" media="print">
+  <meta http-equiv="refresh" content="600">
+  <meta name="author" content="Paul Roach, Paul Aurich, Nathan Reed, Jefferson Cowart, George Casper, Sam Colburn, Charles Cole">
+  <meta name="keywords" content="Based on Pomona, ITS, Information Technology Services, Conportal - adapted for use by Bucknell University&#39;s Library &amp; IT Technology Desk">
+  <meta name="description" content="The internal website for Techdesk scheduling and timeclock functions...">  
+  
+  <script type="text/javascript" src="./Friday Shift_files/appt_details.js.download"></script>
+  <script type="text/javascript" src="./Friday Shift_files/dual_selects.js.download"></script>
+  <script type="text/javascript" src="./Friday Shift_files/highlight.js.download"></script>
+  <script type="text/javascript" src="./Friday Shift_files/tooltips.js.download"></script>
+	<script type="text/javascript" src="./Friday Shift_files/common.js.download"></script>
+  	<script type="text/javascript" src="./Friday Shift_files/css.js.download"></script>
+  	<script type="text/javascript" src="./Friday Shift_files/standardista-table-sorting.js.download"></script>
+	<script type="text/javascript" src="./Friday Shift_files/prototype.js.download"></script>
+  	<script type="text/javascript" src="./Friday Shift_files/sdmenu.js.download"></script>
+  	<link rel="stylesheet" type="text/css" href="./Friday Shift_files/sdmenu.css">
+  <title>Permanent Shifts</title>
+
+<script type="text/javascript">
+
+function showResponse(req) {
+	$('show').innerHTML= req.responseText;
+}
+
+function popUpdate(id) {
+	new Ajax.Request("ajax.php", 
+		{ 
+			method: 'post', 
+			postBody: 'id='+ id,
+			onComplete: showResponse
+		});
+}
+</script>
+
+<style>.village-iframe{width:100%;height:100%;border:none;display:block;position:fixed;top:0;left:0;z-index:2147483647;background:#0000003d;color-scheme:light}.village-iframe.village-loading{display:flex;justify-content:center;align-items:center}.village-iframe>.village-spinner{width:1.5rem;height:1.5rem;border:2px solid #000;border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;animation:spin .45s linear infinite}.village-iframe.village-hidden{display:none}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.village-hidden{display:none}[village-paths-data=facepiles]{display:flex;align-items:center;padding-right:.5rem}[village-paths-data=facepiles] img{width:1.5rem;height:1.5rem;border-radius:50%;margin-right:-.5rem}[village-paths-data=facepiles] img.village-facepiler-avatar-not-found{filter:blur(7px)}[village-paths-data=facepiles] img:last-child{margin-right:0}[village-paths-data=count]{padding-right:.25rem}[village-paths-availability=error],[village-paths-availability=found],[village-paths-availability=not-found],[village-paths-availability=not-activated]{display:none!important}[village-paths-availability=loading]{display:inline-flex!important}</style><link rel="prefetch" href="https://www.linux.bucknell.edu/~conportal/circ/index.php"><link rel="prefetch" href="https://www.linux.bucknell.edu/~conportal/circ/show_shifts.php"><link rel="prefetch" href="https://www.linux.bucknell.edu/~conportal/circ/meetings.php"><link rel="prefetch" href="https://www.linux.bucknell.edu/~conportal/circ/contact.php"><link rel="prefetch" href="https://www.linux.bucknell.edu/~conportal/circ/edit_my_info.php"><script id="simplify-jobs-page-script" src="chrome-extension://pbanhockgagggenencehbnadejlgchfc/js/pageScript.bundle.js"></script></head>
+<body>
+<div id="header">
+<h1>{</h1><h3>con</h3><h1>}</h1>Bucknell Circulation Schedule<h1>{</h1><h3>portal</h3><h1>}</h1>    <h4>Consultant { db074 } logged in.
+        Welcome, Dipesh Bhattarai.</h4>
+</div> 
+
+  <div class="menu">
+    <ul><li><a href="https://www.linux.bucknell.edu/~conportal/circ/index.php">Home</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/show_shifts.php">Shift Schedule</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/meetings.php">Meetings</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/contact.php">Contact Information</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/edit_my_info.php">Edit My Info</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/shift_history.php">Shift History</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/punch_in_out.php">Punch In/Out</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/punch_history.php">Punch History</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/daily_punches.php">Daily Punches</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/missed_shifts.php">Missed Shifts</a></li><li><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/logout.php">Logout</a></li>
+    </ul>
+  </div>
+<div id="right_menu">
+    <h4>
+        <a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1764565200">←</a>
+        January 2026        <a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769922000">→</a>
+        <br><a style="font-size:85%" href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1764997200">Jump to today</a>
+    </h4>
+    <table>
+        <tbody><tr><td>S</td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td></tr>
+        <tr>
+<td class="prevMonth"><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1766898000">28</a></td>
+<td class="prevMonth"><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1766984400">29</a></td>
+<td class="prevMonth"><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767070800">30</a></td>
+<td class="prevMonth"><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767157200">31</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767243600">1</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767330000">2</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767416400">3</a></td>
+</tr>
+<tr>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767502800">4</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767589200">5</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767675600">6</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767762000">7</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767848400">8</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1767934800">9</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768021200">10</a></td>
+</tr>
+<tr>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768107600">11</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768194000">12</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768280400">13</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768366800">14</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768453200">15</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768539600">16</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768626000">17</a></td>
+</tr>
+<tr>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768712400">18</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768798800">19</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768885200">20</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1768971600">21</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769058000">22</a></td>
+<td class="highlighted">23</td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769230800">24</a></td>
+</tr>
+<tr>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769317200">25</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769403600">26</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769490000">27</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769576400">28</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769662800">29</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769749200">30</a></td>
+<td><a href="https://www.linux.bucknell.edu/~conportal/circ/redirects/change_shifts.php?timestamp=1769835600">31</a></td>
+        </tr>
+    </tbody></table>
+</div>
+	<div id="content">
+	<form action="https://www.linux.bucknell.edu/~conportal/circ/shift_confirm.php" method="post">
+        <div id="shifts_by_day_date">
+            Shifts for:
+            Friday, January 23rd, 2026.
+        </div>
+        <div id="shift_draw_message">
+        <b>Shift Draw Information:</b>
+        You currently have drawn <b>6</b> out of
+        <b>6</b> available weekly hours, and <b>0</b> out of <b>8</b> available daily hours. 
+    </div>
+<div id="shifts_by_day">
+    <div class="LegendBar">	
+    <div class="Legend">Legend:</div>
+    <div class="OpenShift" style="height: inherit; float: left">Open Shift</div>
+    <div class="DroppedShift" style="height: inherit; float: left">Dropped Shift</div>	
+    <div class="PermTakenShift" style="height: inherit; float: left">Perm Taken Shift</div>
+    <div class="TempTakenShift" style="height: inherit; float: left">Temp Taken Shift</div>
+    <div class="YourPermShift" style="height: inherit; float: left">Your Perm Shift</div>
+    <div class="YourTempShift" style="height: inherit; float: left">Your Temp Shift</div>
+	<div style="clear:both">	
+		<input type="submit" value="Submit Changes...">                
+		<br>
+
+<!---
+<input name="icalButton"  id="icalButton" type="button" style="display:none" value="Add to calendar..." onClick="alert('Copy and paste the following link into your calendar feed:\n\n\nhttp://www.linux.bucknell.edu/~conportal/ics/366.ics\n')" />
+--->
+
+<input name="icalButton" id="icalButton" type="button" style="display:none" value="Add to calendar..." onclick="javascript:document.getElementById(&#39;ics_instructions&#39;).style.display=&#39;block&#39;">
+
+<div id="ics_instructions" style="display:none">
+<br>
+&nbsp;&nbsp;<u>To subscribe to your Conportal calendar:</u>
+  <ol>
+    <li>Copy the following link: <a href="http://www.linux.bucknell.edu/~conportal/ics/conportal-circ-366.ics">http://www.linux.bucknell.edu/~conportal/ics/conportal-circ-366.ics</a></li>
+    <li>Paste the calendar link into your desired calendar program.</li>
+      <ul>
+        <li>For Google Calendar users:</li>
+	  <ol>
+	    <li>Open Google Calendar.</li>
+	    <li>On the left, click on the drop-down menu for "Other calendars".</li>
+	    <li>Click on "Add by URL".</li>
+	    <li>Paste the calendar link, and click "Add Calendar".</li>
+	    <li>There should now be a new calendar called "Techdesk".</li>
+	  </ol>
+	<li>For Mac Calendar users:</li>
+	  <ol>
+	    <li>Open Calendar.</li>
+	    <li>Click on File &gt; New Calendar Subscription...".</li>
+	    <li>Paste the calendar link, and click "Subscribe".</li>
+	    <li>Modify the desired settings, and click "OK".</li>
+	  </ol>
+      </ul>
+  </ol>
+<input name="hideCal" id="hideCal" type="button" style="display:block" value="Hide" onclick="javascript:document.getElementById(&#39;ics_instructions&#39;).style.display=&#39;none&#39;">
+<br>
+</div>
+
+<iframe name="iCalFrame" id="iCalFrame" height="500" width="500" style="visibility:hidden; display:none" src="./Friday Shift_files/ics.html" onload="javascript:document.getElementById(&#39;icalButton&#39;).style.display=&#39;block&#39;" lkx8ynvtw=""></iframe>	</div>
+	</div>
+        <div style="clear:both"></div>
+    <table>
+        <tbody><tr class="shiftHeader">
+            <td class="time">&nbsp;</td> <!-- Time column -->
+            <td>Circ1</td>
+<td>Circ2</td>
+<td>Stacks</td>
+<td>Leader</td>
+        </tr>
+            <tr>
+            <td class="time">
+<div class="time" style="height:4.5em;">12:00</div>
+<div class="time" style="height:4.5em;">12:30</div>
+<div class="time" style="height:4.5em;">1:00</div>
+<div class="time" style="height:4.5em;">1:30</div>
+<div class="time" style="height:4.5em;">2:00</div>
+<div class="time" style="height:4.5em;">2:30</div>
+<div class="time" style="height:4.5em;">3:00</div>
+<div class="time" style="height:4.5em;">3:30</div>
+<div class="time" style="height:4.5em;">4:00</div>
+<div class="time" style="height:4.5em;">4:30</div>
+<div class="time" style="height:4.5em;">5:00</div>
+<div class="time" style="height:4.5em;">5:30</div>
+<div class="time" style="height:4.5em;">6:00</div>
+<div class="time" style="height:4.5em;">6:30</div>
+<div class="time" style="height:4.5em;">7:00</div>
+<div class="time" style="height:4.5em;">7:30</div>
+<div class="time" style="height:4.5em;">8:00</div>
+<div class="time" style="height:4.5em;">8:30</div>
+<div class="time" style="height:4.5em;">9:00</div>
+<div class="time" style="height:4.5em;">9:30</div>
+<div class="time" style="height:4.5em;">10:00</div>
+<div class="time" style="height:4.5em;">10:30</div>
+<div class="time" style="height:4.5em;">11:00</div>
+<div class="time" style="height:4.5em;">11:30</div>
+<div class="time" style="height:4.5em;">12:00</div>
+<div class="time" style="height:4.5em;">12:30</div>
+<div class="time" style="height:4.5em;">1:00</div>
+<div class="time" style="height:4.5em;">1:30</div>
+<div class="time" style="height:4.5em;">2:00</div>
+<div class="time" style="height:4.5em;">2:30</div>
+<div class="time" style="height:4.5em;">3:00</div>
+<div class="time" style="height:4.5em;">3:30</div>
+<div class="time" style="height:4.5em;">4:00</div>
+<div class="time" style="height:4.5em;">4:30</div>
+<div class="time" style="height:4.5em;">5:00</div>
+<div class="time" style="height:4.5em;">5:30</div>
+<div class="time" style="height:4.5em;">6:00</div>
+<div class="time" style="height:4.5em;">6:30</div>
+<div class="time" style="height:4.5em;">7:00</div>
+<div class="time" style="height:4.5em;">7:30</div>
+<div class="time" style="height:4.5em;">8:00</div>
+<div class="time" style="height:4.5em;">8:30</div>
+<div class="time" style="height:4.5em;">9:00</div>
+<div class="time" style="height:4.5em;">9:30</div>
+            </td>
+<td>
+<div style="height: 9em; ">
+<div class="OpenShift">
+12:00 AM - 1:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div class="NoShift" style="height: 63em"></div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+8:00 AM - 9:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+9:00 AM - 10:00 AM<br>
+1/23 - 5/1<br>
+Erin Wiehn<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+10:00 AM - 11:00 AM<br>
+1/23 - 5/1<br>
+Erin Wiehn<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+11:00 AM - 12:00 PM<br>
+1/23 - 5/1<br>
+Erin Wiehn<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+12:00 PM - 1:00 PM<br>
+1/23 - 5/1<br>
+Aaron Ruohoniemi<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+1:00 PM - 2:00 PM<br>
+1/23 - 5/1<br>
+Aaron Ruohoniemi<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+2:00 PM - 3:00 PM<br>
+1/23 - 5/1<br>
+Aaron Ruohoniemi<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+3:00 PM - 4:00 PM<br>
+1/23 - 5/1<br>
+Bryson Fuhrer<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="PermTakenShift">
+4:00 PM - 5:00 PM<br>
+1/23 - 5/1<br>
+Bryson Fuhrer<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+5:00 PM - 6:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+6:00 PM - 7:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+7:00 PM - 8:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+8:00 PM - 9:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+9:00 PM - 10:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+</td>
+<td>
+<div style="height: 9em; ">
+<div class="OpenShift">
+12:00 AM - 1:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+</td>
+<td>
+<div class="NoShift" style="height: 90em"></div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+10:00 AM - 11:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+11:00 AM - 12:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div class="NoShift" style="height: 18em"></div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+2:00 PM - 3:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+3:00 PM - 4:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+</td>
+<td>
+<div class="NoShift" style="height: 72em"></div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+8:00 AM - 9:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+9:00 AM - 10:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+10:00 AM - 11:00 AM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+11:00 AM - 12:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+12:00 PM - 1:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+1:00 PM - 2:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+2:00 PM - 3:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+3:00 PM - 4:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+<div style="height: 9em; ">
+<div class="OpenShift">
+4:00 PM - 5:00 PM<br>
+1/23 - 5/1<br>
+Shift open<br>
+</div>
+</div>
+</td>
+        </tr>
+        <tr class="shiftHeader">
+            <td class="time">&nbsp;</td> <!-- Time column -->
+            <td>Circ1</td>
+<td>Circ2</td>
+<td>Stacks</td>
+<td>Leader</td>
+        </tr>
+        </tbody></table>
+
+    <div class="LegendBar">	
+    <div class="Legend">Legend:</div>
+    <div class="OpenShift" style="height: inherit; float: left">Open Shift</div>
+    <div class="DroppedShift" style="height: inherit; float: left">Dropped Shift</div>	
+    <div class="PermTakenShift" style="height: inherit; float: left">Perm Taken Shift</div>
+    <div class="TempTakenShift" style="height: inherit; float: left">Temp Taken Shift</div>
+    <div class="YourPermShift" style="height: inherit; float: left">Your Perm Shift</div>
+    <div class="YourTempShift" style="height: inherit; float: left">Your Temp Shift</div>
+	<div style="clear:both">	
+		<input type="submit" value="Submit Changes...">                
+		<br>
+
+<!---
+<input name="icalButton"  id="icalButton" type="button" style="display:none" value="Add to calendar..." onClick="alert('Copy and paste the following link into your calendar feed:\n\n\nhttp://www.linux.bucknell.edu/~conportal/ics/366.ics\n')" />
+--->
+
+<input name="icalButton" id="icalButton" type="button" style="display:none" value="Add to calendar..." onclick="javascript:document.getElementById(&#39;ics_instructions&#39;).style.display=&#39;block&#39;">
+
+<div id="ics_instructions" style="display:none">
+<br>
+&nbsp;&nbsp;<u>To subscribe to your Conportal calendar:</u>
+  <ol>
+    <li>Copy the following link: <a href="http://www.linux.bucknell.edu/~conportal/ics/conportal-circ-366.ics">http://www.linux.bucknell.edu/~conportal/ics/conportal-circ-366.ics</a></li>
+    <li>Paste the calendar link into your desired calendar program.</li>
+      <ul>
+        <li>For Google Calendar users:</li>
+	  <ol>
+	    <li>Open Google Calendar.</li>
+	    <li>On the left, click on the drop-down menu for "Other calendars".</li>
+	    <li>Click on "Add by URL".</li>
+	    <li>Paste the calendar link, and click "Add Calendar".</li>
+	    <li>There should now be a new calendar called "Techdesk".</li>
+	  </ol>
+	<li>For Mac Calendar users:</li>
+	  <ol>
+	    <li>Open Calendar.</li>
+	    <li>Click on File &gt; New Calendar Subscription...".</li>
+	    <li>Paste the calendar link, and click "Subscribe".</li>
+	    <li>Modify the desired settings, and click "OK".</li>
+	  </ol>
+      </ul>
+  </ol>
+<input name="hideCal" id="hideCal" type="button" style="display:block" value="Hide" onclick="javascript:document.getElementById(&#39;ics_instructions&#39;).style.display=&#39;none&#39;">
+<br>
+</div>
+
+<iframe name="iCalFrame" id="iCalFrame" height="500" width="500" style="visibility:hidden; display:none" src="./Friday Shift_files/ics(1).html" onload="javascript:document.getElementById(&#39;icalButton&#39;).style.display=&#39;block&#39;" lkx8ynvtw=""></iframe>	</div>
+	</div>
+      </div>
+</form>
+		<div class="menu" style="position: fixed; bottom: 0px; left: 0px;">
+			<ul style="text-align: center;">
+	<li><a href="https://www.linux.bucknell.edu/~conportal/circ/display_users.php">Manage Users</a></li>
+<li><a href="https://www.linux.bucknell.edu/~conportal/circ/announcements.php">Manage Announcements</a></li>
+			</ul>
+		</div>
+	</div>
+
+
+<a id="bottomBar" style="position: fixed; bottom: -40px; left: 0px; z-index: 9999; transform: translateX(-50%); background-color: transparent; border-radius: 5px 5px 0px 0px; opacity: 0.3; padding: 5px; transition: 0.3s; cursor: pointer; max-height: 100px; max-width: 45px;"><img src="chrome-extension://kobncfkmjelbefaoohoblamnbackjggk/icon/icon_32.png" style="width: 32px; height: 32px;"></a><protonpass-root-6234 data-protonpass-theme="dark"><template shadowrootmode="closed"></template></protonpass-root-6234></body></html>

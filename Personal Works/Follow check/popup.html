@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 400px;
+      max-height: 600px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    h2 {
+      margin: 0 0 15px 0;
+      font-size: 18px;
+      color: #333;
+    }
+    .section {
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #555;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .btn-followers {
+      background-color: #4CAF50;
+    }
+    .btn-followers:hover {
+      background-color: #45a049;
+    }
+    .btn-following {
+      background-color: #2196F3;
+    }
+    .btn-following:hover {
+      background-color: #0b7dda;
+    }
+    .btn-compare {
+      background-color: #FF9800;
+    }
+    .btn-compare:hover {
+      background-color: #e68900;
+    }
+    .btn-clear {
+      background-color: #f44336;
+    }
+    .btn-clear:hover {
+      background-color: #da190b;
+    }
+    button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    .warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .stat-box {
+      padding: 12px;
+      border-radius: 4px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    .stat-number {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    #results {
+      margin-top: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .username-item {
+      padding: 6px;
+      margin: 4px 0;
+      background-color: white;
+      border-radius: 3px;
+      font-size: 13px;
+      border-left: 3px solid #ff5722;
+    }
+    .download-btn {
+      background-color: #9C27B0;
+      margin-top: 10px;
+      font-size: 13px;
+      padding: 10px;
+    }
+    .download-btn:hover {
+      background-color: #7B1FA2;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Follow Comparison Tool</h2>
+  
+  <div class="section">
+    <div class="section-title">Step 1: Extract Your Lists</div>
+    <button id="extractFollowers" class="btn-followers">Save Followers List</button>
+    <button id="extractFollowing" class="btn-following">Save Following List</button>
+  </div>
+
+  <div class="stats hidden" id="statsSection">
+    <div class="stat-box">
+      <div class="stat-number" id="followersCount">0</div>
+      <div class="stat-label">Followers</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number" id="followingCount">0</div>
+      <div class="stat-label">Following</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Step 2: Compare</div>
+    <button id="compare" class="btn-compare">Show Who Doesn't Follow Back</button>
+    <button id="clear" class="btn-clear">Clear Saved Data</button>
+  </div>
+
+  <div id="status"></div>
+  
+  <div id="results" class="hidden"></div>
+  <button id="download" class="download-btn hidden">Download List (.txt)</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

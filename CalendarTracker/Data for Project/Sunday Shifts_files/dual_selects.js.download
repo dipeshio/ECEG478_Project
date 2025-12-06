@@ -1,0 +1,107 @@
+/*
+ *  ConPortal - Pomona College ITS scheduling appplication
+ *  Copyright (C) 2005-2006  Pomona College
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of version 2 of the GNU General Public License
+ *  as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/*
+ * Code for dealing with moving between two select lists.
+ *
+ * Written (based off online resources) by:
+ *      Paul Aurich <paul@aurich.com>, Pomona College
+ *
+ * Based on the following pieces of code.
+ *   - http://www.devx.com/getHelpOn/10MinuteSolution/16372/1763/page/3
+ *     (most of the code)
+ *   - http://www.mredkj.com/tutorials/tutorial_mixed2b.html
+ *     (multiple-selected things)
+ *   - http://www.mattkruse.com/javascript/selectbox/source.html
+ *     (the sorting)
+ */
+function strcmp(a, b)
+{
+    if (a < b) return -1;
+    if (a > b) return 1;
+    return 0;
+}
+
+function sortByText(a, b)
+{
+    // attempt to sort on "names" (two words separated by a space)
+    var a_arr = a.text.split(" ");
+    var b_arr = b.text.split(" ");
+    if (a_arr.length == b_arr.length && a_arr.length == 2) {
+        // compare last name, then first name
+        var tmp = strcmp(a_arr[1], b_arr[1]);
+        if (tmp) { return tmp; }
+        return strcmp(a_arr[0], b_arr[0]);
+    }
+    return strcmp(a.text, b.text);
+}
+
+function sortSelect(o)
+{
+    if (o.length == 0) { return; }
+
+    // transfer the options to an array
+    var arr = new Array();
+    for (var i = 0; i < o.length; ++i)
+        arr[arr.length] = o.options[i];
+
+    // sort the array
+    arr.sort(sortByText);
+
+    // transfer them back
+    for (var i = 0; i < arr.length; ++i)
+        o.options[i] = arr[i];
+}
+
+/* move the selected options in <select> a to <select> b */
+function moveOptions(a, b)
+{
+    a = document.getElementById(a);
+    b = document.getElementById(b);
+
+    if (a.selectedIndex == -1)
+        return;
+
+    b.selectedIndex = -1; // the things moved will be the only
+                          // things selected in b.
+    for (var i = a.length - 1; i >= 0; --i)
+        if (a.options[i].selected)
+            b.appendChild(a.options[i]);
+
+    sortSelect(b);
+}
+
+/* select every option in every select tag in the page */
+function selectAll()
+{
+    arr = document.getElementsByTagName('select');
+    for(var i = 0; i < arr.length; ++i)
+        for (var j = 0; j < arr[i].length; ++j)
+            arr[i].options[j].selected = true;
+}
+
+/* The above function does not work on the meeting punch page if you use user-friendly select drop-downs 
+   This function just selects the selected users box, and marks all of them */
+function selectDualsForMeeting()
+{	
+    arr = document.getElementById('selusers');
+    for(var i = 0; i < arr.length; ++i)
+	{
+            arr.options[i].selected = true;
+	}
+}

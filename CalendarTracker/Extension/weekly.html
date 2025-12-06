@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Shift Schedule - Shift Optimizer</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-secondary: #f8fafc;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: 12px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 24px;
+        }
+
+        .header-stat {
+            text-align: center;
+        }
+
+        .header-stat .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-stat .label {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .header-stat.warning .value {
+            color: #fcd34d;
+        }
+
+        .header-stat.danger .value {
+            color: #fca5a5;
+        }
+
+        /* Week Selector */
+        .week-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .week-selector label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .week-selector select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            min-width: 250px;
+        }
+
+        .week-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .week-info {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-left: 16px;
+            padding-left: 16px;
+            border-left: 1px solid var(--border);
+        }
+
+        .week-info.warning {
+            color: var(--warning);
+            font-weight: 500;
+        }
+
+        .week-info.danger {
+            color: var(--danger);
+            font-weight: 500;
+        }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-bar label {
+            font-size: 13px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .filter-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .filter-toggle input {
+            display: none;
+        }
+
+        .filter-toggle.optimal {
+            background: #fef3c7;
+            color: #78350f;
+            border-color: #f59e0b;
+        }
+
+        .filter-toggle.available {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+
+        .filter-toggle.dropped {
+            background: #fce7f3;
+            color: #9d174d;
+            border-color: #f9a8d4;
+        }
+
+        .filter-toggle.your_shift {
+            background: #dbeafe;
+            color: #1e40af;
+            border-color: #3b82f6;
+        }
+
+        .filter-toggle.taken {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+
+        .filter-toggle.class {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+
+        .filter-toggle.inactive {
+            opacity: 0.4;
+            border-color: transparent;
+        }
+
+        .filter-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .filter-toggle .check {
+            font-size: 14px;
+        }
+
+        .grid-container {
+            overflow-x: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .week-grid {
+            display: grid;
+            grid-template-columns: 80px repeat(7, 1fr);
+            min-width: 1200px;
+        }
+
+        .grid-header {
+            background: var(--bg-secondary);
+            padding: 12px 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .grid-header.time-col {
+            border-right: 1px solid var(--border);
+        }
+
+        .time-slot {
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid #f1f5f9;
+            text-align: right;
+            background: var(--bg-secondary);
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .day-column {
+            border-right: 1px solid var(--border);
+            min-height: 40px;
+            position: relative;
+        }
+
+        .day-column:last-child {
+            border-right: none;
+        }
+
+        .shift-block {
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 1;
+        }
+
+        .shift-block:hover {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .shift-block.available {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+
+        .shift-block.dropped {
+            background: #fce7f3;
+            border: 1px solid #f9a8d4;
+            color: #9d174d;
+        }
+
+        .shift-block.your_shift {
+            background: #dbeafe;
+            border: 2px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .shift-block.taken {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            color: #92400e;
+        }
+
+        .shift-block.optimal {
+            background: linear-gradient(135deg, #fef3c7, #fcd34d);
+            border: 2px solid #f59e0b;
+            color: #78350f;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .shift-block.optimal::before {
+            content: '⭐';
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 10px;
+        }
+
+        .class-block {
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            background: #fee2e2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            z-index: 2;
+        }
+
+        .shift-role {
+            font-size: 9px;
+            opacity: 0.8;
+        }
+
+        .shift-score {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 1px 4px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .shift-score.positive {
+            color: #166534;
+        }
+
+        .shift-score.negative {
+            color: #991b1b;
+        }
+
+        .summary-bar {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            padding: 16px;
+            background: white;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        .summary-item {
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            flex: 1;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .summary-item .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .summary-item .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .summary-item.warning .value {
+            color: var(--warning);
+        }
+
+        .summary-item.success .value {
+            color: var(--accent);
+        }
+
+        .summary-item.danger .value {
+            color: var(--danger);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .no-data h2 {
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .no-data.warning {
+            background: #fef3c7;
+            border-radius: 8px;
+        }
+
+        .no-data.warning h2 {
+            color: #92400e;
+        }
+
+        /* Hidden blocks */
+        .shift-block.hidden,
+        .class-block.hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 Weekly Shift Schedule</h1>
+            <div class="header-stats">
+                <div class="header-stat" id="hoursStatContainer">
+                    <div class="value" id="currentHours">0</div>
+                    <div class="label">Weekly Hours</div>
+                </div>
+                <div class="header-stat">
+                    <div class="value" id="targetHours">13-15</div>
+                    <div class="label">Target</div>
+                </div>
+                <div class="header-stat">
+                    <div class="value">20</div>
+                    <div class="label">Max Allowed</div>
+                </div>
+                <div class="header-stat">
+                    <div class="value" id="recommendedCount">0</div>
+                    <div class="label">Recommended</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Week Selector -->
+        <div class="week-selector">
+            <label for="weekSelect">📆 Select Week:</label>
+            <select id="weekSelect">
+                <option value="">Loading weeks...</option>
+            </select>
+            <span class="week-info" id="weekInfo"></span>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-bar">
+            <label>Display:</label>
+            <label class="filter-toggle optimal" data-filter="optimal">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Optimal
+            </label>
+            <label class="filter-toggle available" data-filter="available">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Available
+            </label>
+            <label class="filter-toggle dropped" data-filter="dropped">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Dropped
+            </label>
+            <label class="filter-toggle your_shift" data-filter="your_shift">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Your Shifts
+            </label>
+            <label class="filter-toggle taken" data-filter="taken">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Taken
+            </label>
+            <label class="filter-toggle class" data-filter="class">
+                <input type="checkbox" checked>
+                <span class="check">✓</span> Classes
+            </label>
+        </div>
+
+        <div class="grid-container" id="gridContainer">
+            <div class="no-data" id="noData">
+                <h2>No shift data available</h2>
+                <p>Visit Conportal shift schedule to scrape data first.</p>
+            </div>
+        </div>
+        <div class="summary-bar" id="summaryBar" style="display: none;">
+            <div class="summary-item">
+                <div class="value" id="totalAvailable">0</div>
+                <div class="label">Available</div>
+            </div>
+            <div class="summary-item">
+                <div class="value" id="streakShifts">0</div>
+                <div class="label">2+ Hour Blocks</div>
+            </div>
+            <div class="summary-item" id="hoursNeededItem">
+                <div class="value" id="hoursNeeded">0</div>
+                <div class="label">Hours Needed</div>
+            </div>
+            <div class="summary-item success">
+                <div class="value" id="optimalShifts">0</div>
+                <div class="label">Optimal</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="optimizer.js"></script>
+    <script src="weekly.js"></script>
+</body>
+
+</html>

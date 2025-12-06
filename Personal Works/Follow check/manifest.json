@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Username Extractor",
+  "version": "1.0",
+  "description": "Extract usernames from HTML elements and download as text file",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

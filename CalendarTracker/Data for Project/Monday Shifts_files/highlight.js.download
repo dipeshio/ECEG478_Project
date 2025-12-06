@@ -1,0 +1,42 @@
+/*
+ *  ConPortal - Pomona College ITS scheduling appplication
+ *  Copyright (C) 2005-2006  Pomona College
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of version 2 of the GNU General Public License
+ *  as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/*
+ * Code for highlighting/unhighlighting TRs
+ *
+ * Written by:
+ *      Paul Aurich <paul@aurich.com>, Pomona College
+ */
+
+/*
+ * Highlight a row in a table when the mouse is hovering over it.
+ * These functions are event handlers for onmouseover and onmouseout
+ * respectively
+ */
+function highlight(el)
+{
+    if (!el.oldClassName)
+        el.oldClassName = el.className;
+    el.className = "highlighted";
+}
+
+function unhighlight(el)
+{
+    if (el.oldClassName)
+        el.className = el.oldClassName;
+}

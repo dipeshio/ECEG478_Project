@@ -1,0 +1,621 @@
+/*
+ *  ConPortal - Pomona College ITS scheduling appplication
+ *  Copyright (C) 2005-2006  Pomona College
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of version 2 of the GNU General Public License
+ *  as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/* base font */
+body
+{
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10pt;
+    margin: 0px 0px 1.5em 0px; /* 1.5em bottom for the admin bar */
+}
+
+h1, h2, h3, h4, h5, h6, p
+{
+	margin: 0px;
+}
+
+/* header styles */
+
+#header {
+  padding: 10px;
+  background: #FFA500;
+  color: white;
+  display:none;
+}
+
+#header h1, #header h3 {
+  display: inline;
+}
+
+#header h3 {
+  padding: 10px;
+  vertical-align: middle;
+}
+
+#header h4 {
+  padding: 10px;
+}
+
+.center {
+    text-align: center;
+}
+
+.weekend {
+	color: red;
+}
+
+/* menu styles */
+
+.menu {
+  background: blue;
+  border-top: 1px solid white;
+  border-bottom: 1px solid white;
+  width: 100%;
+  display: none;
+  height: 1.6em;
+  line-height: 1.6em;
+}
+
+.menu a {
+  background: blue;
+  padding: 0.2em 8px 0.2em 8px;
+  color: white;
+  text-decoration: none;
+}
+
+.menu a:hover {
+  background: white;
+  color: blue;
+}
+
+.menu ul {
+  padding-left: 50px;
+  list-style: none;
+  display: inline;
+}
+
+.menu ul li {
+  display: inline;
+}
+
+#right_menu {
+  background: #FFA500;
+  border-left: 1px solid white;
+  border-bottom: 1px solid white;
+  float: left;
+  padding: 20px;
+  display: none
+}
+
+#right_menu h4 {
+  color: white;
+  text-align: center;
+}
+
+#right_menu table {
+  text-align: center;
+  font-weight: bold;
+}
+
+#right_menu table td {
+  padding: 2px;
+}
+
+#right_menu table td.highlighted {
+  background: white;
+  color: #FFA500;
+  -moz-border-radius: 5px;
+}
+
+#right_menu table td.today {
+  border: 1px solid white;
+  -moz-border-radius: 5px;
+}
+
+#right_menu table td.prevMonth a, #right_menu table td.nextMonth a {
+  color: #b0b0b0;
+}
+
+#right_menu a {
+  color: white;
+  text-decoration: none;
+  display: block;
+}
+
+#right_menu h4 a
+{
+	display: inline;
+}
+
+#right_menu a:hover {
+  color: #FFA500;
+  background: white;
+}
+
+#right_menu li {
+  list-style: none;
+}
+
+/* shifts styles */
+
+#shifts_by_day_date
+{
+	padding: 10px;
+	background: orange;
+	color: white;
+	font-weight: bold;
+}
+
+#shift_draw_message
+{
+	padding: 10px;
+	background: orange;
+	color: white;
+      	display: none;
+}
+
+#shifts_by_day {
+  position: static;
+  padding: 0px;
+  padding-bottom: 2em;
+  float: left;
+}
+
+#shifts_by_day table {
+  padding: 0px;
+  border-right: 1px solid #FFA500;
+}
+
+#shifts_by_day table tr {
+  background: white;
+  color: #FFA500;
+  border-bottom: 1px solid #FFA500;
+  border-left: 1px solid #FFA500;
+}
+
+#shifts_by_day table tr.shiftHeader td {
+  width: 10.5em;
+  background: #000099;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  vertical-align: baseline;
+}
+
+#shifts_by_day table tr.shiftHeader td.time  {
+  width: 3.5em;
+  text-align: center;
+}
+
+#shifts_by_day table tr td {
+  vertical-align: top;
+  padding: 0px;
+  page-break-after: auto;
+  page-break-inside: avoid !important;
+}
+
+#shifts_by_day table tr td.time { 
+  background: #000099;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  padding: 5px;  /*initially 5 */
+  page-break-inside: avoid !important;
+}
+
+#shifts_by_day table tr div.time {
+  width: 100%;
+  height: 4.5em; /*init 4.5 */
+  page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.NoShift {
+}
+
+#shifts_by_day div.OpenShift {
+  background: white;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: black;
+  padding: 3px;
+  height: 100%;
+	page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.PermTakenShift {
+  background: #66CC00;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  padding: 3px;
+  height: 100%;
+  page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.TempTakenShift {
+  background: #66CC99;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  padding: 3px;
+  height: 100%;
+	page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.YourPermShift {
+  background: #6666FF;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  padding: 3px;
+  height: 100%;
+	page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.YourTempShift {
+  background: #9999FF;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  padding: 3px;
+  height: 100%;
+	page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.DroppedShift {
+  background: #CCCCCC;
+  border: 1px solid black;
+  font-weight: bold;
+  text-align: center;
+  color: black;
+  padding: 3px;
+  height: 100%;
+	page-break-inside: avoid !important;
+}
+
+#shifts_by_day div.Legend {
+	padding: 3px;
+	float: left;
+}
+
+.LegendBar {
+	display: none;
+}
+
+/* for the position headers */
+.header {
+  width: 8.5em;
+  background: #FFA500;
+  color: white;
+  text-align: center;
+}
+
+/* styles for appointments page */
+#create_appt
+{
+	float: left;
+}
+
+#create_appt_title
+{
+	padding: 10px;
+	background: orange;
+	color: white;
+	font-weight: bold;
+}	
+
+#create_appt table
+{
+	border-style: none;
+}
+
+#create_appt table td
+{
+	padding: 5px;
+}
+
+#shifts_by_day div.Appointment
+{
+	padding: 3px;
+	margin: 5px 2px 5px 2px;
+	border: 1px solid gray;
+	background: #FF8000;
+	color: white;
+	font-weight: bold;
+}
+
+.AppointmentDetailsLink
+{
+	color: white;
+	text-decoration: underline;
+}
+
+div.AppointmentDetails
+{
+	position: absolute;
+	width: 12em;
+	height: 6em;
+	overflow: auto;
+	padding: 5px;
+	color: black;
+	font-weight: bold;
+	background-color: white;
+	border: 1px solid black;
+	visibility: hidden;		/* Initially invisible */
+	text-align: center;
+}
+div.AppointmentDetails .CloseIcon
+{
+	position: absolute;		/* with respect to containing element */
+	top: 3px;
+	right: 3px;
+	width: 8px;
+	height: 8px;
+	border: 0px;
+}
+
+#shifts_by_day div.UnstaffedAppointment
+{
+	padding: 3px;
+	margin: 5px 2px 5px 2px;
+	border: 1px solid gray;
+	background: red;
+	color: white;
+	font-weight: bold;
+}
+
+/* for displaying login failed on login page */
+.warn {
+  color: red;
+  font-weight: bold;
+}
+
+.note {
+    color: blue;
+    font-weight: bold;
+}
+
+.small {
+	font-size: 8pt;
+}
+
+.clearBoth {
+  clear:both;
+}
+
+/* styles for index page */
+
+#index_content h4 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#index_content li {
+  margin-bottom: 10px;
+}
+
+.index_box {
+	padding: 10px;
+	margin: 10px;
+	background: #FFA500;
+	-moz-border-radius: 10px;
+}
+
+#index_left, #index_right {
+  float: left;
+  width: 25%;
+}
+
+#index_center {
+  float: left;
+  width: 40%;
+}
+
+.index_perm_shift {
+  color: white;
+  background: #808080;
+  display: block;
+  padding: 5px;
+  margin: 5px 0px;
+  -moz-border-radius: 10px;
+}
+
+.index_appt {
+  color: white;
+  background: #808080;
+  display: block;
+  padding: 5px;
+  margin: 5px 0px;
+  -moz-border-radius: 10px;
+}
+
+/* styles for checkout pages */
+
+table.checkoutItems td {
+  border: 1px solid black;
+}
+
+table.checkoutItems tr.header {
+  text-align: center;
+  font-weight: bold;
+  background: #aaaaaa;
+}
+
+.checkoutMain {
+  padding: 15px;
+}
+
+#addCheckout label {
+    width: 4em;
+}
+
+/* styles for adding users/groups/perms */
+form label {
+    float: left;
+}
+
+#loginForm label {
+    width: 5em;
+}
+
+#addUser label, #modUser label {
+    width: 9em;
+}
+
+#addGroup label, #addPerm label {
+    float: left;
+    width: 5em;
+}
+
+#usersTable {
+    border: 1px solid;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#usersTable th {
+    background: orange;
+    color: orange;
+    text-transform: capitalize;
+}
+
+#usersTable td {
+    border-left: 1px solid;
+    border-right: 1px solid;
+    padding-left: 0.1em;
+}
+
+.shiftsTable
+{
+    width: 100%;
+    border: 1px solid black;
+}
+
+/* permsTable stuff */
+.permsTable
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.permsTable td
+{   
+    padding-left: 1px;
+    text-align: left;
+}
+    
+.permsTable th
+{
+    text-align: center;
+}
+
+.permsTable .moveButtons
+{
+    padding-left: .25em;
+    padding-right: .25em;
+}
+
+.moveButtons button {
+    width: 7em;
+    display: block;
+}
+
+tr.d0 {
+    background: #dbdbdb;
+}
+
+tr.d1 {
+    background: #dbdbdb;
+}
+
+tr.highlighted {
+    background: orange;
+}
+
+.shift_history {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.shift_history th {
+    font-weight: bold;
+    padding: 2px;
+}
+
+.shift_history td {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+/* styles for announcements */
+
+#announcements {
+    padding: 2px;
+}
+
+#newAnnouncement table {
+    border: 0;
+}
+
+#existingAnnouncements td {
+    border: 1px solid black;
+}
+
+.announcementSubject {
+    font-weight: bold;
+}
+
+.announcementDate {
+}
+
+.announcementMessage {
+}
+
+#extendAnnouncement {
+    padding: 2px;
+}
+
+/* styles for meetings */
+
+.meetingsTable
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.meetingsTable td
+{   
+    padding-left: 1px;
+    text-align: left;
+}
+    
+.meetingsTable th
+{
+    text-align: center;
+}
+
+#meetingDetails td
+{
+	padding: 5px;
+	vertical-align: top;
+}

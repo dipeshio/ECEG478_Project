@@ -1,0 +1,61 @@
+/*
+ *  ConPortal - Pomona College ITS scheduling appplication
+ *  Copyright (C) 2005-2006  Pomona College
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of version 2 of the GNU General Public License
+ *  as published by the Free Software Foundation.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/*
+ * Javascript code for the "appointment details" windows
+ * Nathan Reed, 5/31/2006
+ */
+
+/*
+ * Return the absolute location of an element's upper-left corner with respect
+ * to the document coordinate system; works in all browsers AFAIK
+ */
+function getElementPos (elem)
+{
+	var pt = { x: 0, y: 0 }
+	var cur = elem;
+	while (cur != null)
+	{
+		pt.x += cur.offsetLeft;
+		pt.y += cur.offsetTop;
+		cur = cur.offsetParent;
+	}
+	return pt;
+}
+
+/*
+ * Displays the details window identified by "id", at the location
+ * of the page element "at_elem"
+ */
+function showDetails (id, at_elem)
+{
+	details = document.getElementById(id);
+	// Move to the appropriate location
+	pt = getElementPos(at_elem);
+	details.style.left = pt.x + 'px';
+	details.style.top = pt.y + 'px';
+	details.style.visibility = 'visible';
+}
+
+/*
+ * Hides the details window
+ */
+function hideDetails (id)
+{
+	document.getElementById(id).style.visibility = 'hidden';
+}

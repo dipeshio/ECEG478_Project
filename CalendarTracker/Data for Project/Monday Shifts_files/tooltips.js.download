@@ -1,0 +1,178 @@
+/*
+ * Code for creating/handling 'tooltips' of sorts...
+ * Copyright (C) 2006 Paul Aurich <paul@aurich.com>
+ *
+ * Description of how code works:
+ *     This file registers tooltips() as a callback for window.onload.
+ *     That function looks at every tag and, if that element has the
+ *     'hasTooltip' class and a 'title', it will transform that into a tooltip.
+ *     e.g. <div class='hasTooltip blahClass' title='Tooltip text'>Blah</div>
+ *
+ *     The title is deleted and a new child node is created (hidden) as the
+ *     tooltip. An onmouseover event is regstered for the block that calls
+ *     tooltip_mouseover().
+ *
+ *     That function shows the tooltip, deregisters itself from the onmouseover
+ *     event and registers tooltip_mouseout() as a callback for onmouseout.
+ *
+ *     tooltip_mouseout() doesn't actually hide the tooltip, but registers a
+ *     very very short timeout (with callback of tooltip_hide()) to do the
+ *     dirty work. tooltip_mouseout also switches the events (re-registers
+ *     onmouseover to tooltip_mouseover)
+ *
+ *     The reasoning behind having tooltip_hide be called through a timeout
+ *     is that, if a set of data is being displayed in a tabular format and
+ *     each row has a tooltip, this will allow a more 'seamless' transition
+ *     from one element to the next without causing as much flickering.
+ *
+ *     If a tooltip_mouseover() is trigged *before* tooltip_hide() has executed,
+ *     tooltip_hide() is immediately called and the timeout is deactivated.
+ */
+
+var divNode = document.createElement('div');
+
+/*
+ * Based on (un)escapeHTML from prototype v1.4.0
+ * http://wiki.script.aculo.us/scriptaculous/show/prototype+V1.4.0
+ */
+function escapeHTML(t)
+{
+    if (!t || t == '')
+        return '';
+    var tmp = divNode.cloneNode(true);
+    tmp.appendChild(document.createTextNode(t));
+    return tmp.innerHTML;
+}
+
+function unescapeHTML(t)
+{
+    if (!t || t == '')
+        return '';
+    var tmp = divNode.cloneNode(true);
+    tmp.innerHTML = t;
+    return tmp.childNodes[0] ? tmp.childNodes[0].nodeValue : '';
+}
+
+function tooltips()
+{
+    if(!(document.createElement && document.getElementsByTagName))
+        return;
+    
+    var tags = document.getElementsByTagName('*');
+    for (var i = 0; i < tags.length; ++i) {
+        if (!(tags[i].className.match('hasTooltip')))
+            continue;
+        if (!tags[i].getAttribute('title'))
+            continue;
+
+        // create the tooltip
+        var tmp = divNode.cloneNode(true);
+        tmp.innerHTML = tags[i].getAttribute('title');
+        tmp.className = 'tooltip';
+        tmp.style.display = 'none';
+
+        // add in the tooltip and create callbacks
+        tags[i].appendChild(tmp);
+        tags[i].removeAttribute('title');
+        tags[i].onmouseover = tooltip_mouseover;
+    }
+}
+
+function getEventNode(e)
+{
+    var t = (e.target) ? e.target : e.srcElement;
+
+    // Safari Bug
+    if (t && t.nodeType == 3)
+        t = t.parentNode;
+
+    return t;
+}
+
+/*
+ * Safari has a nasty bug where it will generate mouseover or mouseout calls
+ * ALL THE TIME from the #text node to its parent if the parent simply has
+ * the event registered. This appears to catch those cases and tooltips still
+ * work at other times...
+ *
+ * See http://www.quirksmode.org/js/events/all.html
+ * -and-
+ * http://www.quirksmode.org/js/ (section on mouseovers and mouseouts on any
+ * element)
+ */
+function stupidDamnedSafariBug(e)
+{
+    var from = e.fromElement;
+    var to   = e.toElement;
+
+    return (from && to && from.nodeType == 3 && from.parentNode == to);
+}
+
+function tooltip_mouseover(e)
+{
+    if (!e)
+        e = window.event;
+    
+    var n = getEventNode(e);
+    if (!n || stupidDamnedSafariBug(e))
+        return false;
+
+    for (var i = 0; i < n.childNodes.length; ++i) {
+        var tmp = n.childNodes[i];
+        // assumes you set the class='tooltip' on the lowest-most tag
+        // you could and didn't put any other HTML elements inside it...
+        if (tmp.style && tmp.style.display)
+            if (tmp.style.display == 'none')
+                tmp.style.display = 'block';
+    }
+
+    // If we have a callback to remove another tooltip, go ahead and turn
+    // that one off as we turn this one on.
+    if (tooltip_timeout)
+        tooltip_hide();
+
+    // update the callbacks
+    n.onmouseover = null;
+    n.onmouseout  = tooltip_mouseout;
+    return false;
+}
+
+function tooltip_hide()
+{
+    n = tooltip_timeoutNode;
+    for (var i = 0; i < n.childNodes.length; ++i) {
+        var tmp = n.childNodes[i];
+        if (tmp.style && tmp.style.display)
+            if (tmp.style.display == 'block') tmp.style.display = 'none';
+    }
+
+    tooltip_timeout = null;
+    return false;
+}
+
+function tooltip_mouseout(e)
+{
+    if (!e)
+        e = window.event;
+
+    var n = getEventNode(e);
+    if (!n || stupidDamnedSafariBug(e))
+        return false;
+
+    if (tooltip_timeout)
+        alert('Already had a timeout. Please tell webmaster');
+    tooltip_timeoutNode = n;
+    tooltip_timeout = setTimeout(tooltip_hide, 300);
+
+    // update the callbacks
+    n.onmouseover = tooltip_mouseover;
+    n.onmouseout  = null;
+    return false;
+}
+
+var tooltip_timeout = null;
+var tooltip_timeoutNode = null;
+
+// Handle multiple events registered to window.onload...
+var tmp = window.onload ? window.onload : function () {};
+window.onload = function() {tmp(); tooltips(); };

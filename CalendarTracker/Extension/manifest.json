@@ -1,0 +1,33 @@
+{
+    "manifest_version": 3,
+    "name": "Shift Scheduler Optimizer",
+    "version": "1.0.0",
+    "description": "Scrapes shift data from Bucknell Conportal and recommends optimal work schedules for students.",
+    "permissions": [
+        "storage",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "*://www.linux.bucknell.edu/*",
+        "*://linux.bucknell.edu/*"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_title": "Shift Scheduler Optimizer"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://www.linux.bucknell.edu/~conportal/circ/show_shifts.php*",
+                "*://linux.bucknell.edu/~conportal/circ/show_shifts.php*"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
+}

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shift Scheduler Optimizer</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <h1>📅 Shift Optimizer</h1>
+                <span class="status-badge" id="statusBadge">Ready</span>
+            </div>
+            <p class="subtitle">Bucknell Library Circulation</p>
+        </header>
+
+        <!-- Dashboard Summary -->
+        <section class="dashboard" id="dashboard">
+            <div class="stat-card primary">
+                <span class="stat-value" id="currentHours">0</span>
+                <span class="stat-label">Current Hours</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="targetHours">13-15</span>
+                <span class="stat-label">Target Hours</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="availableShifts">0</span>
+                <span class="stat-label">Available</span>
+            </div>
+            <div class="stat-card accent">
+                <span class="stat-value" id="optimalCount">0</span>
+                <span class="stat-label">Recommended</span>
+            </div>
+        </section>
+
+        <!-- Progress Bar -->
+        <section class="progress-section">
+            <div class="progress-header">
+                <span>Weekly Progress</span>
+                <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-target" id="progressTarget"></div>
+            </div>
+        </section>
+
+        <!-- Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="shifts">All Shifts</button>
+            <button class="tab-btn" data-tab="recommended">Recommended</button>
+            <button class="tab-btn" data-tab="your-shifts">Your Shifts</button>
+            <button class="tab-btn" data-tab="earnings">Earnings</button>
+            <button class="tab-btn" data-tab="settings">Settings</button>
+        </nav>
+
+        <!-- Tab Content: All Shifts -->
+        <section class="tab-content active" id="shifts-tab">
+            <div class="table-controls">
+                <select id="dayFilter" class="filter-select">
+                    <option value="">All Days</option>
+                    <option value="Sunday">Sunday</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                </select>
+                <select id="statusFilter" class="filter-select">
+                    <option value="">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="dropped">Dropped</option>
+                    <option value="taken">Taken</option>
+                    <option value="your_shift">Your Shifts</option>
+                </select>
+            </div>
+
+            <div class="spreadsheet-container">
+                <table class="spreadsheet" id="shiftsTable">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="shiftsBody">
+                        <tr class="empty-row">
+                            <td colspan="6">No shifts loaded. Visit the Conportal shift schedule to scrape data.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tab Content: Recommended -->
+        <section class="tab-content" id="recommended-tab">
+            <div class="recommendation-summary" id="recommendationSummary">
+                <p>Click "Analyze" to get shift recommendations based on your class schedule.</p>
+            </div>
+
+            <!-- Date Range Filter -->
+            <div class="date-range-filter">
+                <label>📅 Range:</label>
+                <input type="date" id="recStartDate" class="setting-input" value="2026-01-20">
+                <span>to</span>
+                <input type="date" id="recEndDate" class="setting-input" value="2026-05-04">
+                <button id="applyDateRange" class="btn btn-secondary btn-small">Apply</button>
+            </div>
+
+            <div class="spreadsheet-container">
+                <table class="spreadsheet" id="recommendedTable">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Day</th>
+                            <th>Time</th>
+                            <th>Role</th>
+                            <th>Score</th>
+                            <th>Reasons</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recommendedBody">
+                        <tr class="empty-row">
+                            <td colspan="6">No recommendations yet.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tab Content: Your Shifts -->
+        <section class="tab-content" id="your-shifts-tab">
+            <div class="spreadsheet-container">
+                <table class="spreadsheet" id="yourShiftsTable">
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Role</th>
+                            <th>Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yourShiftsBody">
+                        <tr class="empty-row">
+                            <td colspan="5">No scheduled shifts found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tab Content: Earnings -->
+        <section class="tab-content" id="earnings-tab">
+            <div class="earnings-summary">
+                <div class="earnings-card">
+                    <span class="earnings-label">Rate</span>
+                    <span class="earnings-value" id="hourlyRate">$10.25/hr</span>
+                </div>
+                <div class="earnings-card">
+                    <span class="earnings-label">Semester Gross</span>
+                    <span class="earnings-value" id="semesterGross">$0.00</span>
+                </div>
+                <div class="earnings-card accent">
+                    <span class="earnings-label">Semester Net</span>
+                    <span class="earnings-value" id="semesterNet">$0.00</span>
+                </div>
+            </div>
+            <div class="tax-breakdown">
+                <span>Taxes: PA State 3.07% + City 1.07% + LST 0.65% = <strong>4.79%</strong></span>
+            </div>
+            <div class="spreadsheet-container">
+                <table class="spreadsheet" id="earningsTable">
+                    <thead>
+                        <tr>
+                            <th>Pay Period</th>
+                            <th>Hours</th>
+                            <th>Gross</th>
+                            <th>Tax</th>
+                            <th>Net</th>
+                            <th>Paycheck</th>
+                        </tr>
+                    </thead>
+                    <tbody id="earningsBody">
+                        <tr class="empty-row">
+                            <td colspan="6">No earnings data. Schedule shifts to see estimates.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Tab Content: Settings -->
+        <section class="tab-content" id="settings-tab">
+            <!-- Preferences Section -->
+            <div class="settings-section">
+                <h3>⚙️ Preferences</h3>
+                <div class="setting-row">
+                    <label for="targetMin">Target Hours (Min)</label>
+                    <input type="number" id="targetMin" class="setting-input" value="13" min="1" max="20">
+                </div>
+                <div class="setting-row">
+                    <label for="targetMax">Target Hours (Max)</label>
+                    <input type="number" id="targetMax" class="setting-input" value="15" min="1" max="20">
+                </div>
+                <div class="setting-row">
+                    <label for="preferredStart">Preferred Start Time</label>
+                    <select id="preferredStart" class="setting-input">
+                        <option value="8">8:00 AM</option>
+                        <option value="9">9:00 AM</option>
+                        <option value="10">10:00 AM</option>
+                        <option value="11">11:00 AM</option>
+                        <option value="12">12:00 PM</option>
+                        <option value="13">1:00 PM</option>
+                        <option value="14">2:00 PM</option>
+                        <option value="15">3:00 PM</option>
+                        <option value="16" selected>4:00 PM</option>
+                        <option value="17">5:00 PM</option>
+                        <option value="18">6:00 PM</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="preferredEnd">Preferred End Time</label>
+                    <select id="preferredEnd" class="setting-input">
+                        <option value="17">5:00 PM</option>
+                        <option value="18">6:00 PM</option>
+                        <option value="19">7:00 PM</option>
+                        <option value="20">8:00 PM</option>
+                        <option value="21">9:00 PM</option>
+                        <option value="22" selected>10:00 PM</option>
+                        <option value="23">11:00 PM</option>
+                        <option value="24">12:00 AM</option>
+                        <option value="25">1:00 AM</option>
+                    </select>
+                </div>
+                <div class="setting-row toggle-row">
+                    <label for="includeLeader">Include Leader Shifts</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="includeLeader">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <button id="savePrefsBtn" class="btn btn-primary" style="margin-top: 10px;">Save Preferences</button>
+            </div>
+
+            <!-- Class Schedule Section -->
+            <div class="settings-section">
+                <h3>📚 Class Schedule</h3>
+                <p class="settings-hint">Manage your classes to avoid scheduling conflicts.</p>
+                <div class="class-list" id="classList"></div>
+                <div class="add-class-form" id="addClassForm">
+                    <select id="newClassDay" class="setting-input">
+                        <option value="Monday">Monday</option>
+                        <option value="Tuesday">Tuesday</option>
+                        <option value="Wednesday">Wednesday</option>
+                        <option value="Thursday">Thursday</option>
+                        <option value="Friday">Friday</option>
+                    </select>
+                    <input type="text" id="newClassName" class="setting-input"
+                        placeholder="Class Name (e.g., MATH 280)">
+                    <input type="time" id="newClassStart" class="setting-input" value="10:00">
+                    <input type="time" id="newClassEnd" class="setting-input" value="10:50">
+                    <button id="addClassBtn" class="btn btn-secondary">+ Add</button>
+                </div>
+            </div>
+
+            <!-- Data Management Section -->
+            <div class="settings-section">
+                <h3>🗄️ Data Management</h3>
+                <div class="button-row">
+                    <button id="clearDataBtn" class="btn btn-danger">Clear Shift Data</button>
+                    <button id="exportDataBtn" class="btn btn-secondary">Export Data</button>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-info">
+                    <p><strong>Last Scraped:</strong> <span id="lastScraped">Never</span></p>
+                    <p><strong>Days Loaded:</strong> <span id="daysLoaded">0</span></p>
+                    <p><strong>Max Weekly Hours:</strong> 20 (University Rule)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons - 3 compact buttons -->
+        <footer class="actions">
+            <button id="analyzeBtn" class="btn btn-primary btn-compact">
+                <span class="btn-icon">🔍</span> Analyze
+            </button>
+            <button id="openWeeklyBtn" class="btn btn-accent btn-compact">
+                <span class="btn-icon">📊</span> Weekly
+            </button>
+            <button id="refreshBtn" class="btn btn-secondary btn-compact">
+                <span class="btn-icon">🔄</span> Refresh
+            </button>
+        </footer>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <script src="optimizer.js"></script>
+    <script src="popup.js"></script>
+</body>
+
+</html>

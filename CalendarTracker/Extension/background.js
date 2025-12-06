@@ -1,4 +1,4 @@
-/**
+    /**
  * Background Service Worker for Shift Scheduler Optimizer
  * Handles data persistence and state management
  */
@@ -104,26 +104,31 @@ function getDefaultCalendar() {
         schoolYearStart: '2026-01-20',
         classes: [
             // Monday classes
-            { day: 'Monday', startTime: '10:00', endTime: '10:50', name: 'MATH 280' },
-            { day: 'Monday', startTime: '11:00', endTime: '11:50', name: 'MATH 358' },
-            { day: 'Monday', startTime: '15:00', endTime: '16:20', name: 'ECON 370' },
+            { day: 'Monday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+            { day: 'Monday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
+            { day: 'Monday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+            { day: 'Monday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
 
             // Tuesday classes  
-            { day: 'Tuesday', startTime: '10:00', endTime: '11:20', name: 'CSCI 365' },
-            { day: 'Tuesday', startTime: '14:30', endTime: '15:50', name: 'ECON 441' },
+            { day: 'Tuesday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
+            { day: 'Tuesday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
+            { day: 'Tuesday', startTime: '13:00', endTime: '14:50', name: 'ECEG 310 Lab', location: 'ELC 228' },
 
             // Wednesday classes
-            { day: 'Wednesday', startTime: '10:00', endTime: '10:50', name: 'MATH 280' },
-            { day: 'Wednesday', startTime: '11:00', endTime: '11:50', name: 'MATH 358' },
-            { day: 'Wednesday', startTime: '15:00', endTime: '16:20', name: 'ECON 370' },
+            { day: 'Wednesday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+            { day: 'Wednesday', startTime: '10:00', endTime: '10:50', name: 'ECEG 478 Lab', location: 'Dana 216' },
+            { day: 'Wednesday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+            { day: 'Wednesday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' },
 
             // Thursday classes
-            { day: 'Thursday', startTime: '10:00', endTime: '11:20', name: 'CSCI 365' },
-            { day: 'Thursday', startTime: '14:30', endTime: '15:50', name: 'ECON 441' },
+            { day: 'Thursday', startTime: '09:30', endTime: '10:50', name: 'ECEG 478', location: 'Dana 216' },
+            { day: 'Thursday', startTime: '11:00', endTime: '12:20', name: 'ECEG 310', location: 'ELC 231' },
+            { day: 'Thursday', startTime: '14:00', endTime: '15:50', name: 'CSCI 315 Lab', location: 'Breakiron 164' },
 
             // Friday classes
-            { day: 'Friday', startTime: '10:00', endTime: '10:50', name: 'MATH 280' },
-            { day: 'Friday', startTime: '11:00', endTime: '11:50', name: 'MATH 358' }
+            { day: 'Friday', startTime: '09:00', endTime: '09:50', name: 'ECEG 478', location: 'Dana 216' },
+            { day: 'Friday', startTime: '13:00', endTime: '13:50', name: 'ECEG 310', location: 'ELC 231' },
+            { day: 'Friday', startTime: '14:00', endTime: '14:50', name: 'CSCI 315', location: 'Breakiron 164' }
         ],
         // No classes on Saturday/Sunday
         holidays: [

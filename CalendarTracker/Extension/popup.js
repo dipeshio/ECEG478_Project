@@ -64,7 +64,14 @@
         semesterNet: document.getElementById('semesterNet'),
         recStartDate: document.getElementById('recStartDate'),
         recEndDate: document.getElementById('recEndDate'),
-        applyDateRange: document.getElementById('applyDateRange')
+        applyDateRange: document.getElementById('applyDateRange'),
+        bulkStartDate: document.getElementById('bulkStartDate'),
+        bulkEndDate: document.getElementById('bulkEndDate'),
+        startBulkScrapeBtn: document.getElementById('startBulkScrapeBtn'),
+        bulkScrapeProgress: document.getElementById('bulkScrapeProgress'),
+        bulkScrapeStatus: document.getElementById('bulkScrapeStatus'),
+        bulkScrapePercent: document.getElementById('bulkScrapePercent'),
+        bulkScrapeFill: document.getElementById('bulkScrapeFill')
     };
 
     function init() {
@@ -98,6 +105,17 @@
         if (elements.applyDateRange) {
             elements.applyDateRange.addEventListener('click', renderRecommendedTable);
         }
+        if (elements.startBulkScrapeBtn) {
+            elements.startBulkScrapeBtn.addEventListener('click', startBulkScrape);
+        }
+
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.action === 'BULK_SCRAPE_PROGRESS') {
+                updateBulkProgress(message.data);
+            } else if (message.action === 'BULK_SCRAPE_COMPLETE') {
+                finishBulkScrape(message.data);
+            }
+        });
     }
 
     async function loadData() {
@@ -535,6 +553,51 @@
         elements.toastMessage.textContent = message;
         elements.toast.classList.add('show');
         setTimeout(() => elements.toast.classList.remove('show'), 3000);
+    }
+
+    function startBulkScrape() {
+        const startDate = elements.bulkStartDate.value;
+        const endDate = elements.bulkEndDate.value;
+
+        if (!startDate || !endDate) {
+            showToast('Please select both start and end dates.');
+            return;
+        }
+
+        if (startDate > endDate) {
+            showToast('Start date must be before end date.');
+            return;
+        }
+
+        elements.startBulkScrapeBtn.disabled = true;
+        elements.startBulkScrapeBtn.textContent = 'Scraping...';
+        elements.bulkScrapeProgress.style.display = 'block';
+        updateBulkProgress({ current: 0, total: 1, date: 'Initializing...' });
+
+        chrome.runtime.sendMessage({
+            action: 'START_BULK_SCRAPE',
+            data: { startDate, endDate }
+        });
+    }
+
+    function updateBulkProgress(data) {
+        const { current, total, date } = data;
+        const percent = Math.round((current / total) * 100);
+
+        elements.bulkScrapeStatus.textContent = `Scraping: ${date}`;
+        elements.bulkScrapePercent.textContent = `${percent}%`;
+        elements.bulkScrapeFill.style.width = `${percent}%`;
+    }
+
+    function finishBulkScrape(data) {
+        elements.startBulkScrapeBtn.disabled = false;
+        elements.startBulkScrapeBtn.textContent = 'Start Auto-Scrape';
+        elements.bulkScrapeStatus.textContent = 'Complete!';
+        elements.bulkScrapePercent.textContent = '100%';
+        elements.bulkScrapeFill.style.width = '100%';
+
+        showToast(`Scraped ${data.count} days successfully!`);
+        loadData();
     }
 
     document.addEventListener('DOMContentLoaded', init);

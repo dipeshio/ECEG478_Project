@@ -18,8 +18,8 @@
     "content_scripts": [
         {
             "matches": [
-                "*://www.linux.bucknell.edu/~conportal/circ/show_shifts.php*",
-                "*://linux.bucknell.edu/~conportal/circ/show_shifts.php*"
+                "*://www.linux.bucknell.edu/~conportal/*",
+                "*://linux.bucknell.edu/~conportal/*"
             ],
             "js": [
                 "content.js"

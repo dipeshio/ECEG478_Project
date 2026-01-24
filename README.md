@@ -1,16 +1,17 @@
-# 🤖 fairface-ml-project
+# fairface-ml-project
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+FairFace-based ML project exploring demographic bias. Includes data loaders, model tests, and analysis notebooks.
 
-A machine learning final project using the FairFace dataset to explore bias and fairness in facial recognition models.
+## Contents
+- dataTesting.ipynb, finalDataTesting.ipynb – exploration and evaluation
+- main_modules/ – reusable loaders and model code
+- FairFace/, FairFaceMain/ – dataset CSVs and splits
 
-## Setup
-
+## Use
 ```bash
-pip install -r requirements.txt
 jupyter notebook
 ```
+Open the notebooks and ensure the FairFace CSVs remain in the FairFace* directories. Install typical Python ML deps (numpy, pandas, torch, matplotlib) before running.
 
 ## License
-
-MIT © 2026 dipeshio
+MIT

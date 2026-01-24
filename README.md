@@ -1,22 +1,16 @@
-# fairface-ml-project
+# 🤖 fairface-ml-project
 
-Machine learning project using the FairFace dataset for facial attribute analysis. Includes data testing notebooks and model evaluation.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-## Structure
-- `dataTesting.ipynb` - Initial data exploration
-- `finalDataTesting.ipynb` - Final model testing
-- `FairFace/` - Dataset directory
-- `main_modules/` - Core ML modules
+A machine learning final project using the FairFace dataset to explore bias and fairness in facial recognition models.
 
-## Usage
+## Setup
+
 ```bash
+pip install -r requirements.txt
 jupyter notebook
 ```
 
-Open the notebooks to explore the data and run models.
-
-## Note
-Requires the FairFace dataset to be placed in the appropriate directory.
-
 ## License
-MIT
+
+MIT © 2026 dipeshio
